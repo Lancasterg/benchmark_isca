@@ -1,0 +1,7 @@
+#!/bin/sh
+#PBS -l select=1:ncpus=28
+#PBS -l walltime=72:00:00
+
+module load tools/git/2.22.0
+source activate isca_env
+python $BECHMARK_ISCA/scale/main.py -mincores 2 -maxcores 2 -r T21 -r T42 -r T85  -codebase grey_mars
