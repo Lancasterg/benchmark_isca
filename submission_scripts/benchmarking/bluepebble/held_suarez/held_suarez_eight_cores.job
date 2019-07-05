@@ -4,4 +4,4 @@
 
 module load tools/git/2.22.0
 source activate isca_env
-python $BECHMARK_ISCA/scale/main.py -mincores 8 -maxcores 8 -r T21 -r T42 -r T85  -codebase held_suarez
+python $BENCHMARK_ISCA/scale/main.py -mincores 8 -maxcores 8 -r T21 -r T42 -r T85  -codebase held_suarez

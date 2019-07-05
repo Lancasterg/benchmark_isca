@@ -9,4 +9,4 @@
 #PBS -m e -M qv18258@bristol.ac.uk # email me at job
 
 source activate isca_env
-python $BECHMARK_ISCA/scale/main.py -codebase held_suarez -mincores 16 -maxcores 16 -r T21 -r T42 -r T85
+python $BENCHMARK_ISCA/scale/main.py -codebase held_suarez -mincores 16 -maxcores 16 -r T21 -r T42 -r T85
