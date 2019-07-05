@@ -9,7 +9,6 @@ if __name__ == "__main__":
     core_list = get_core_list(max_cores, min_cores)
     res_list = get_resolution_list(res_list)
     cb, diag, namelist = setup_experiment(codebase_name)
-    print(core_list)
     for i, ncores in enumerate(core_list):
         for j, resolution in enumerate(res_list):
             exp_name = f'{codebase_name}_{ncores}_{resolution[0]}'

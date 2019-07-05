@@ -1,28 +1,12 @@
-import numpy as np
+from isca import GreyCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
 
-from isca import IscaCodeBase, GreyCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
-from isca.util import exp_progress
-#from ntfy import notify
 
 NCORES = 32
-
-# a CodeBase can be a directory on the computer,
-# useful for iterative development
 cb = GreyCodeBase.from_directory(GFDL_BASE)
-# cb = GreyCodeBase.from_repo(repo='git@github.com:sit23/Isca.git', commit='7145be9')
 
-# or it can point to a specific git repo and commit id.
-# This method should ensure future, independent, reproducibility of results.
-# cb = DryCodeBase.from_repo(repo='https://github.com/isca/isca', commit='isca1.1')
 
-# compilation depends on computer specific settings.  The $GFDL_ENV
-# environment variable is used to determine which `$GFDL_BASE/src/extra/env` file
-# is used to load the correct compilers.  The env file is always loaded from
-# $GFDL_BASE and not the checked out git repo.
+cb.compile()
 
-cb.compile()  # compile the source code to working directory $GFDL_WORK/codebase
-
-# create a diagnostics output file for daily snapshots
 diag = DiagTable()
 #diag.add_file('atmos_monthly', 30, 'days', time_units='days')
 diag.add_file('atmos_daily',88440 , 'seconds', time_units='days')
@@ -213,14 +197,11 @@ namelist = Namelist({
 
 })
 
-if __name__=="__main__":
+if __name__ == "__main__":
 
     conv_schemes = ['none']
-
     depths = [2.]
-
     pers = [70.85]
-
     scale = 1.
 
     for conv in conv_schemes:
@@ -239,9 +220,6 @@ if __name__=="__main__":
                 exp.namelist['mixed_layer_nml']['depth'] = depth_val
                 exp.namelist['astronomy_nml']['per'] = per_value
 
-#            with exp_progress(exp, description='o%.0f d{day}' % scale):
                 exp.run(1, use_restart=False, num_cores=NCORES)
                 for i in range(2, 241):
-#                with exp_progress(exp, description='o%.0f d{day}' % scale):
                     exp.run(i, num_cores=NCORES)
-#                notify('top down with conv scheme = '+conv+' has completed', 'isca')

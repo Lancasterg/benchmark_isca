@@ -1,4 +1,4 @@
-from isca import Experiment, GFDL_BASE
+from isca import Experiment
 from util_output import write_to_csvfile
 import argparse
 import constants
@@ -50,20 +50,13 @@ def setup_experiment(codebase):
     :return:
     """
     if codebase == constants.HELD_SUAREZ:
-        from held_suarez_config import setup_held_suarez_codebase, setup_held_suarez_diag, setup_held_suarez_namelist
+        from config.held_suarez_config import setup_held_suarez_codebase, setup_held_suarez_diag, setup_held_suarez_namelist
         return setup_held_suarez_codebase(), setup_held_suarez_diag(), setup_held_suarez_namelist()
     if codebase == constants.GREY_MARS:
-        from grey_mars_config import setup_grey_mars_codebase, setup_grey_mars_namelist, setup_grey_mars_diag
+        from config.grey_mars_config import setup_grey_mars_codebase, setup_grey_mars_namelist, setup_grey_mars_diag
         return setup_grey_mars_codebase(), setup_grey_mars_diag(), setup_grey_mars_namelist()
     return None
 
-
-# def run_trace_experiment(ncores, codebase, diag, namelist, resolution, exp_name, runs=13):
-#     exp = Experiment(f'{exp_name}', codebase=codebase)
-#     exp.clear_rundir()
-#     exp.diag_table = diag
-#     exp.namelist = namelist.copy()
-#     exp.set_resolution(*resolution)
 
 def run_experiment(ncores, codebase, diag, namelist, resolution, exp_name, codebase_name):
     runs = 0

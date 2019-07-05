@@ -16,7 +16,8 @@ def main():
             exp.diag_table = diag
             exp.namelist = namelist.copy()
             exp.set_resolution(*resolution)
-            # exp.run(1, use_restart=False, num_cores=ncores, mpirun_opts='-trace')
+            exp.run(1, use_restart=False, num_cores=ncores, mpirun_opts='-trace')
+            # copy trace file to the exp_name folder?
 
 
 if __name__ == '__main__':

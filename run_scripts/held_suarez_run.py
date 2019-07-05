@@ -1,36 +1,16 @@
-import numpy as np
-
 from isca import DryCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
 
 NCORES = 1
-RESOLUTION = 'T42', 25  # T42 horizontal resolution, 25 levels in pressure
+RESOLUTION = 'T42', 25
 
-# a CodeBase can be a directory on the computer,
-# useful for iterative development
 cb = DryCodeBase.from_directory(GFDL_BASE)
-
-# or it can point to a specific git repo and commit id.
-# This method should ensure future, independent, reproducibility of results.
-# cb = DryCodeBase.from_repo(repo='https://github.com/isca/isca', commit='isca1.1')
-
-# compilation depends on computer specific settings.  The $GFDL_ENV
-# environment variable is used to determine which `$GFDL_BASE/src/extra/env` file
-# is used to load the correct compilers.  The env file is always loaded from
-# $GFDL_BASE and not the checked out git repo.
-
 cb.compile(debug=True)  # compile the source code to working directory $GFDL_WORK/codebase
-
-# create an Experiment object to handle the configuration of model parameters
-# and output diagnostics
 
 exp_name = 'held_suarez_default'
 exp = Experiment(exp_name, codebase=cb)
 
-#Tell model how to write diagnostics
 diag = DiagTable()
 diag.add_file('atmos_monthly', 30, 'days', time_units='days')
-
-#Tell model which diagnostics to write
 diag.add_field('dynamics', 'ps', time_avg=True)
 diag.add_field('dynamics', 'bk')
 diag.add_field('dynamics', 'pk')
@@ -39,11 +19,8 @@ diag.add_field('dynamics', 'vcomp', time_avg=True)
 diag.add_field('dynamics', 'temp', time_avg=True)
 diag.add_field('dynamics', 'vor', time_avg=True)
 diag.add_field('dynamics', 'div', time_avg=True)
-
 exp.diag_table = diag
 
-# define namelist values as python dictionary
-# wrapped as a namelist object.
 namelist = Namelist({
     'main_nml': {
         'dt_atmos': 600,
@@ -102,7 +79,6 @@ namelist = Namelist({
 exp.namelist = namelist
 exp.set_resolution(*RESOLUTION)
 
-#Lets do a run!
 if __name__ == '__main__':
     exp.run(1, num_cores=NCORES, use_restart=False, run_idb=True)
     for i in range(2, 13):
