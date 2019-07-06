@@ -5,4 +5,4 @@
 #PBS -M =qv18258@bristol.ac.uk
 
 source ~/isca_env/bin/activate
-python ~/Isca/benchmarking/scaling/main.py -mincores 32 -maxcores 32 -r T21 -r T42 -r T85 -codebase grey_mars
+python $BENCHMARK_ISCA/src/trace_craypat.py -mincores 32 -maxcores 32 -r T21 -r T42 -r T85 -codebase held_suarez
