@@ -1,5 +1,9 @@
+import os
+
 RESULTS_DIR = 'results_dir'
 HELD_SUAREZ = 'held_suarez'
 GREY_MARS = 'grey_mars'
-GFDL_BENCH = '/Users/george/isca_home/gfdl_bench'
-GFDL_TRACE = '/Users/george/isca_home/gfdl_trace'
+
+GFDL_BENCH = os.environ['GFDL_BENCH']
+
+print(GFDL_BENCH)
