@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=benchmark_grey_mars_eight_cores
 #SBATCH --partition=cpu
-#SBATCH --time=14-00:00:00
+#SBATCH --time=5-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=16
 #number of cpus (cores) per task (process)
