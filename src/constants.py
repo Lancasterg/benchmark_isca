@@ -6,4 +6,3 @@ GREY_MARS = 'grey_mars'
 
 GFDL_BENCH = os.environ['GFDL_BENCH']
 
-print(GFDL_BENCH)
