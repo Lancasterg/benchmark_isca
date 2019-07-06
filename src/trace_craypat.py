@@ -19,7 +19,7 @@ def main():
             exp.diag_table = diag
             exp.namelist = namelist.copy()
             exp.set_resolution(*resolution)
-            exp.run(1, use_restart=False, num_cores=ncores)
+            exp.run(1, use_restart=False, num_cores=ncores, save_run=True)
 
 
 if __name__ == '__main__':
