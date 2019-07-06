@@ -7,8 +7,6 @@ def main():
     res_list = get_resolution_list(res_list)
     cb, diag, namelist = setup_experiment(codebase_name)
     cb.executable_name = cb.executable_name + '+pat'
-    print(cb.executable_name)
-    print(cb.executable_fullpath)
 
     for i, ncores in enumerate(core_list):
         for j, resolution in enumerate(res_list):
