@@ -23,4 +23,4 @@ source $GFDL_BASE/src/extra/env/bristol-bc4
 source activate isca_env
 
 
-$HOME/.conda/envs/isca_env/bin/python $BENCHMARK_ISCA/scale/main.py -mincores 8 -maxcores 8 -r T21 -r T42 -r T85 -codebase held_suarez
+$HOME/.conda/envs/isca_env/bin/python $BENCHMARK_ISCA/src/main.py -mincores 8 -maxcores 8 -r T21 -r T42 -r T85 -codebase held_suarez
