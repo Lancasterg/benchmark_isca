@@ -69,8 +69,8 @@ def run_experiment(ncores, codebase, diag, namelist, resolution, exp_name, codeb
     exp.rm_datadir()
     exp.clear_rundir()
     exp.diag_table = diag
-    exp.namelist = namelist.copy()
     exp.set_resolution(*resolution)
+    exp.namelist = namelist.copy()
 
     start = time.time()
     exp.run(1, use_restart=False, num_cores=ncores)
