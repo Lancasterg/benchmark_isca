@@ -5,4 +5,4 @@
 #PBS -M =qv18258@bristol.ac.uk
 
 source ~/isca_env/bin/activate
-python $BENCHMARK_ISCA/src/main.py -mincores 1 -maxcores 1 -r T42 -r T85 -codebase grey_mars
+python $BENCHMARK_ISCA/src/main.py -mincores 4 -maxcores 4 -r T170 -codebase grey_mars
