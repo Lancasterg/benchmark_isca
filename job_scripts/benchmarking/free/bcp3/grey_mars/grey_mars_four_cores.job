@@ -9,4 +9,4 @@
 #PBS -m e -M qv18258@bristol.ac.uk # email me at job
 
 source activate isca_env
-python $BENCHMARK_ISCA/src/main.py -codebase grey_mars -mincores 4 -maxcores 4 -r T170
+python $BENCHMARK_ISCA/src/main.py -codebase grey_mars -mincores 4 -maxcores 4 -r T21 -r T42 -r T85 -r T170
