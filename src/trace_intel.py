@@ -2,7 +2,7 @@ from util_scale import *
 
 
 def main():
-    max_cores, min_cores, codebase_name, res_list = parse_arguments()
+    max_cores, min_cores, codebase_name, res_list, iteration = parse_arguments()
     core_list = get_core_list(max_cores, min_cores)
     res_list = get_resolution_list(res_list)
     cb, diag, namelist = setup_experiment(codebase_name)

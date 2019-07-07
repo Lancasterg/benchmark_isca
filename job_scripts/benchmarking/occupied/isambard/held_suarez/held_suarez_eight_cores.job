@@ -1,0 +1,8 @@
+#!/bin/sh
+#PBS -q arm
+#PBS -l select=1
+#PBS -l walltime=23:00:00
+#PBS -M =qv18258@bristol.ac.uk
+
+source ~/isca_env/bin/activate
+python $BENCHMARK_ISCA/src/main.py -mincores 8 -maxcores 8 -r T170 -codebase held_suarez

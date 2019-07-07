@@ -12,6 +12,7 @@ def parse_arguments():
     -maxcores: The maximum number of cores to test
     -maxres: The maximum resolution to test
     -codebase: Which experiment to run. One of: held_suarez, grey_mars
+    -i: Iteration number for concurrent experiments
     """
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-maxcores', type=int, default=16, help='The maximum number of cores to test')
@@ -20,8 +21,18 @@ def parse_arguments():
                         help='A list of resolutions to test. For example: -r T21 -r T42 -r T85')
     parser.add_argument('-codebase', type=str, default='held_suarez',
                         help='Which experiment to run. One of: held_suarez, grey_mars')
+    parser.add_argument('-i', type=str, default='',
+                        help='Iteration number for concurrent experiments')
     args = parser.parse_args()
-    return args.maxcores, args.mincores, args.codebase, args.r
+    iteration = ''
+    if args.i != '':
+        try:
+            iteration = int(args.i)
+        except ValueError:
+            print('Argument -i must be integer')
+            print('eg: -i 4')
+
+    return args.maxcores, args.mincores, args.codebase, args.r, iteration
 
 
 def get_core_list(max_cores, min_cores):
@@ -69,11 +80,11 @@ def run_experiment(ncores, codebase, diag, namelist, resolution, exp_name, codeb
     exp.rm_datadir()
     exp.clear_rundir()
     exp.diag_table = diag
-    exp.set_resolution(*resolution)
     exp.namelist = namelist.copy()
-
+    exp.set_resolution(*resolution)
     start = time.time()
-    exp.run(1, use_restart=False, num_cores=ncores)
+    print(exp.namelist)
+    # exp.run(1, use_restart=False, num_cores=ncores)
     end = time.time()
     time_delta = end - start
     data = [ncores, resolution[0], 1, time_delta]

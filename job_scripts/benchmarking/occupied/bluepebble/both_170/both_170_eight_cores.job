@@ -1,0 +1,8 @@
+#!/bin/sh
+#PBS -l select=1:ncpus=28
+#PBS -l walltime=72:00:00
+
+module load tools/git/2.22.0
+source activate isca_env
+python $BENCHMARK_ISCA/src/main.py -mincores 8 -maxcores 8 -r T170 -codebase grey_mars
+python $BENCHMARK_ISCA/src/main.py -mincores 8 -maxcores 8 -r T170 -codebase held_suarez
