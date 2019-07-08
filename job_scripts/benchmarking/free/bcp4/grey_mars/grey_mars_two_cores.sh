@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=benchmark_grey_mars_two_cores
 #SBATCH --partition=cpu
-#SBATCH --time=10-00:00:00
+#SBATCH --time=5-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=16
 #number of cpus (cores) per task (process)
@@ -23,4 +23,4 @@ source $GFDL_BASE/src/extra/env/bristol-bc4
 source activate isca_env
 
 
-$HOME/.conda/envs/isca_env/bin/python $BENCHMARK_ISCA/src/main.py -mincores 1 -maxcores 1 -r T21 -r T42 -r T85 -codebase grey_mars
+$HOME/.conda/envs/isca_env/bin/python $BENCHMARK_ISCA/src/main.py -mincores 2 -maxcores 2 -r T21 -r T42 -codebase grey_mars
