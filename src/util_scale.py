@@ -83,7 +83,6 @@ def run_experiment(ncores, codebase, diag, namelist, resolution, exp_name, codeb
     exp.namelist = namelist.copy()
     exp.set_resolution(*resolution)
     start = time.time()
-    print(exp.namelist)
     exp.run(1, use_restart=False, num_cores=ncores)
     end = time.time()
     time_delta = end - start
