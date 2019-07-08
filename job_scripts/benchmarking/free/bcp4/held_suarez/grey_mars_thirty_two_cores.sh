@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=benchmark_held_suarez_sixteen_cores
+#SBATCH --job-name=benchmark_held_suarez_thirty_two
 #SBATCH --partition=cpu
 #SBATCH --time=14-00:00:00
 #SBATCH --nodes=2
