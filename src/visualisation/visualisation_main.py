@@ -2,9 +2,14 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from sklearn import preprocessing
 
 dir_loc = '/Users/george/isca_python/visualisation/bcp3/whole_node/held_suarez/'
 spreadsheet_dir = '/Users/george/Dropbox/university_of_bristol/thesis/data_collection/run_measurements.xlsx'
+clusters = ['BCP3', 'BCP4', 'BP', 'Isambard']
+configs = ['Held_suarez', 'Grey_mars']
+
+colours = {'BCP3': ''}
 
 
 def read_resolution(resolution):
@@ -52,7 +57,7 @@ def process_dataframe(sheet_name, resolution, config):
     df['Cluster'] = sheet_name
     df = df[df.Resolution == resolution]
     df = df[df['Node Resources'] == 'All']
-    df = df[df.Config == 'Held_suarez']
+    df = df[df.Config == config]
     df = df.dropna()
     df["Runtime"] = pd.to_numeric(df["Runtime"])
     return df
@@ -96,22 +101,15 @@ def fix_data():
 
 
 def plot_bar_graph(resolution, config):
-    df_bcp3 = process_dataframe('BCP3', resolution, config)
-    df_bcp3_max = df_bcp3.loc[df_bcp3['Runtime'].idxmin(), :]
+    arr = []
+    for cluster in clusters:
+        df_temp = process_dataframe(cluster, resolution, config)
+        df_temp_min = df_temp.loc[df_temp['Runtime'].idxmin(), :]
+        arr.append(df_temp_min)
 
-    df_bcp4 = process_dataframe('BCP4', resolution, config)
-    df_bcp4_max = df_bcp4.loc[df_bcp4['Runtime'].idxmin(), :]
-
-    df_bp = process_dataframe('BP', resolution, config)
-    df_bp_max = df_bp.loc[df_bp['Runtime'].idxmin(), :]
-
-    df_isam = process_dataframe('Isambard', resolution, config)
-    df_isam_max = df_isam.loc[df_isam['Runtime'].idxmin(), :]
-
-    df = pd.DataFrame([df_bcp3_max, df_bcp4_max, df_bp_max, df_isam_max])
+    df = pd.DataFrame(arr)
 
     ax = df.plot.bar(x='Cluster', y='Runtime', rot=0, edgecolor="black", linewidth=0.5)
-
     ax.set_axisbelow(True)
     ax.set_ylabel('Runtime (seconds)')
     ax.minorticks_on()
@@ -125,11 +123,55 @@ def plot_bar_graph(resolution, config):
     plt.show()
 
 
+def plot_split_bar_graph(resolution):
+    arr = []
+    for cluster in clusters:
+        for config in configs:
+            df_temp = process_dataframe(cluster, resolution, config)
+            df_temp_min = df_temp.loc[df_temp['Runtime'].idxmin(), :]
+            arr.append(df_temp_min)
+    df = pd.DataFrame(arr)
+    df_plot = pd.DataFrame([df[(df.Config == config)]['Runtime'].reset_index(drop=True) for config in configs],
+                           index=configs).T
+    df_plot.rename(index={0: 'BCP3', 1: 'BCP4', 2: 'BP', 3: 'Isambard'}, inplace=True)
+    axes = df_plot.plot.bar(rot=0, subplots=True, edgecolor="black", linewidth=0.5)
+    for ax in axes:
+        ax.set_axisbelow(True)
+        ax.set_ylabel('Wallclock runtime (seconds)')
+        ax.minorticks_on()
+        ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
+        ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+    plt.show()
+
+
+def plot_total_program():
+    data_list = ['bcp3/grey_mars_16_T42.csv', 'bcp4/grey_mars_16_T42.csv', 'isambard/grey_mars_32_T42.csv']
+    plt.figure()
+    ax = plt.gca()
+    for data in data_list:
+        df = pd.read_csv(f'/Users/george/benchmark_isca/data/{data}', skiprows=0)
+        df = df[df.Epoch != 'Total']
+        times = df[['Time']].values.astype(float)
+        min_max_scaler = preprocessing.MinMaxScaler()
+        times_scaled = min_max_scaler.fit_transform(times)
+        df['Time'] = times_scaled
+        df.plot(x='Epoch', y='Time', ax=ax, style='-o')
+
+    ax.set_axisbelow(True)
+    ax.set_ylabel('Wallclock runtime (normalised)')
+    ax.minorticks_on()
+    ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
+    ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+    plt.show()
+
+
 def main():
-    # plot_scaling_graph('T21')
-    # plot_scaling_graph('T42')
-    # plot_scaling_graph('T85')
-    plot_bar_graph('T42', 'Grey_mars')
+    plot_total_program()
+    plot_split_bar_graph('T42')
+    plot_scaling_graph('T21')
+    plot_scaling_graph('T42')
+    plot_scaling_graph('T85')
+    plot_bar_graph('T42', 'Held_suarez')
 
 
 if __name__ == '__main__':
