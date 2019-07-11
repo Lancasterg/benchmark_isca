@@ -1,10 +1,10 @@
 from isca import DryCodeBase, DiagTable, Experiment, Namelist, GFDL_BASE
 
-NCORES = 1
+NCORES = 16
 RESOLUTION = 'T42', 25
 
 cb = DryCodeBase.from_directory(GFDL_BASE)
-cb.compile(debug=True)  # compile the source code to working directory $GFDL_WORK/codebase
+cb.compile(debug=False)  # compile the source code to working directory $GFDL_WORK/codebase
 
 exp_name = 'held_suarez_default'
 exp = Experiment(exp_name, codebase=cb)
@@ -82,4 +82,4 @@ exp.set_resolution(*RESOLUTION)
 if __name__ == '__main__':
     exp.run(1, num_cores=NCORES, use_restart=False, run_idb=True)
     for i in range(2, 13):
-        exp.run(i, num_cores=NCORES,run_idb=True)  # use the restart i-1 by default
+        exp.run(i, num_cores=NCORES)  # use the restart i-1 by default
