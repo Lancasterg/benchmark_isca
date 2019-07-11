@@ -80,6 +80,6 @@ exp.namelist = namelist
 exp.set_resolution(*RESOLUTION)
 
 if __name__ == '__main__':
-    exp.run(1, num_cores=NCORES, use_restart=False, run_idb=True)
+    exp.run(1, num_cores=NCORES, use_restart=False)
     for i in range(2, 13):
         exp.run(i, num_cores=NCORES)  # use the restart i-1 by default
