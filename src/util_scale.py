@@ -23,6 +23,8 @@ def parse_arguments():
                         help='Which experiment to run. One of: held_suarez, grey_mars')
     parser.add_argument('-i', type=str, default='',
                         help='Iteration number for concurrent experiments')
+    parser.add_argument('-fc', type=str, help='Which Fortran compiler are you using? One of: INTEL, CRAY, GNU',
+                        default='INTEL')
     args = parser.parse_args()
     iteration = ''
     if args.i != '':
@@ -32,7 +34,7 @@ def parse_arguments():
             print('Argument -i must be integer')
             print('eg: -i 4')
 
-    return args.maxcores, args.mincores, args.codebase, args.r, iteration
+    return args.maxcores, args.mincores, args.codebase, args.r, iteration, args.fc
 
 
 def get_core_list(max_cores, min_cores):
@@ -61,7 +63,8 @@ def setup_experiment(codebase):
     :return:
     """
     if codebase == constants.HELD_SUAREZ:
-        from config.held_suarez_config import setup_held_suarez_codebase, setup_held_suarez_diag, setup_held_suarez_namelist
+        from config.held_suarez_config import setup_held_suarez_codebase, setup_held_suarez_diag, \
+            setup_held_suarez_namelist
         return setup_held_suarez_codebase(), setup_held_suarez_diag(), setup_held_suarez_namelist()
     if codebase == constants.GREY_MARS:
         from config.grey_mars_config import setup_grey_mars_codebase, setup_grey_mars_namelist, setup_grey_mars_diag
