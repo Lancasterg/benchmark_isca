@@ -1,6 +1,6 @@
 #!/bin/sh
 #PBS -q arm
-#PBS -l select=1:ppn=64
+#PBS -l select=1:ncpus=32
 #PBS -l walltime=23:00:00
 #PBS -M =qv18258@bristol.ac.uk
 
