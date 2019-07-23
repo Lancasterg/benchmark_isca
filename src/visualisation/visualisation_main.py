@@ -171,7 +171,7 @@ def main():
     plot_scaling_graph('T21')
     plot_scaling_graph('T42')
     plot_scaling_graph('T85')
-    plot_bar_graph('T42', 'Held_suarez')
+    plot_bar_graph('T42', 'Grey_mars')
 
 
 if __name__ == '__main__':

@@ -5,4 +5,4 @@
 #PBS -M =qv18258@bristol.ac.uk
 
 source ~/isca_env/bin/activate
-python $BENCHMARK_ISCA/src/main.py -mincores 64 -maxcores 64 -r T85 -r T170 -codebase held_suarez
+python $BENCHMARK_ISCA/src/main.py -mincores 64 -maxcores 64 -r T85 -codebase held_suarez
