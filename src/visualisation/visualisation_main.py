@@ -166,12 +166,12 @@ def plot_total_program():
 
 
 def main():
-    plot_total_program()
-    plot_split_bar_graph('T42')
-    plot_scaling_graph('T21')
-    plot_scaling_graph('T42')
-    plot_scaling_graph('T85')
-    plot_bar_graph('T42', 'Grey_mars')
+    # plot_total_program()
+    # plot_split_bar_graph('T42')
+    # plot_scaling_graph('T21')
+    # plot_scaling_graph('T42')
+    # plot_scaling_graph('T85')
+    plot_bar_graph('T42', 'Held_suarez')
 
 
 if __name__ == '__main__':

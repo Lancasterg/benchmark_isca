@@ -1,0 +1,24 @@
+#!/bin/sh
+#PBS -q arm
+#PBS -l select=1
+#PBS -l walltime=23:00:00
+#PBS -M =qv18258@bristol.ac.uk
+
+source ~/isca_env/bin/activate
+
+start=`date +%s.%N`
+
+for i in {1..7}; do
+   #time python $BENCHMARK_ISCA/src/scalability_ncores.py -n 28 -p 4 -r T42 -codebase held_suarez -fc {i} &
+
+   sleep 1000
+done
+
+# Wait for all simulations to complete
+wait
+end=`date +%s.%N`
+
+runtime=$((end-start))
+
+
+echo total runtime: $runtime
