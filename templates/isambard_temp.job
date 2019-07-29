@@ -6,19 +6,15 @@
 
 source ~/isca_env/bin/activate
 
-start=`date +%s.%N`
+START_TIME=$SECONDS
 
-for i in {1..7}; do
+for i in {1..16}; do
    #time python $BENCHMARK_ISCA/src/scalability_ncores.py -n 28 -p 4 -r T42 -codebase held_suarez -fc {i} &
-
-   sleep 1000
+   echo hello {i} &
 done
 
 # Wait for all simulations to complete
 wait
-end=`date +%s.%N`
+ELAPSED_TIME=$(($SECONDS - $START_TIME))
 
-runtime=$((end-start))
-
-
-echo total runtime: $runtime
+echo total runtime: $ELAPSED_TIME
