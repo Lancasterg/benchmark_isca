@@ -1,7 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.ticker as ticker
+from matplotlib import rc
+import visualisation_constants as Const
 
+# Use LaTeX fonts
+plt.rc('font', family='serif')
+rc('text', usetex=True)
+
+# Performance as measured from BluePebble
 program_total_performance = 1.54  # GFLOPS
 program_total_ai = 0.11  # flop/byte
 yticks = [0.001, 0.01, 0.1, 1, 10, 100, 1000]
@@ -11,7 +18,7 @@ def main():
     plt.figure(figsize=(10, 6), dpi=300)
     plt.ylabel('Double Precision GFLOPS/Second (SIMD)')
     plt.xlabel('Operational Intensity (FLOPS/byte)')
-    plt.title('Roofline model of Isca running on 16 Intel Xeon Gold 6126 cores at 2.6GHz\n (BluePebble)')
+    plt.title('Roofline model of Isca running on 16 Intel Xeon Gold 6126 cores at 2.6GHz\n (Skylake)')
     arrowprops = dict(facecolor='black', shrink=0.05, width=0.8, headwidth=5, headlength=5)
     ax = plt.gca()
     ax.axis([0.0001, 100, 0.0001, 10000])
@@ -48,12 +55,12 @@ def main():
     peak = (1, 1000)
     plt.text(peak[0], peak[1], 'DP Vector Peak = 584.99', fontsize=12)
 
-    ax.scatter(program_total_ai, program_total_performance, edgecolor='black', linewidth='1', color='purple',
-               label=f'Program total performance', s=100, zorder=2)
-    ax.annotate(f'{program_total_performance} GFLOPS\n{program_total_ai} FLOP/Byte',
-                xy=(program_total_ai, program_total_performance),
-                xytext=(program_total_ai - 0.1, 0.1),
-                arrowprops=arrowprops)
+    # ax.scatter(program_total_ai, program_total_performance, edgecolor='black', linewidth='1', color='purple',
+    #            label=f'Program total performance', s=100, zorder=2)
+    # ax.annotate(f'{program_total_performance} GFLOPS\n{program_total_ai} FLOP/Byte',
+    #             xy=(program_total_ai, program_total_performance),
+    #             xytext=(program_total_ai - 0.1, 0.1),
+    #             arrowprops=arrowprops)
 
     ax.scatter(0.11, 1.68, edgecolor='black', linewidth='1', color='blue',
                label=f'Program total performance', s=100, zorder=2)
@@ -61,7 +68,6 @@ def main():
                 xy=(0.11, 1.68),
                 xytext=(program_total_ai + 0.1, 10),
                 arrowprops=arrowprops)
-
 
     ax.scatter(5.69, 0.22, edgecolor='black', linewidth='1', color='red', label='Loop in vpassm at fft99.F90:1081',
                zorder=2, s=100)
@@ -78,6 +84,7 @@ def main():
                 arrowprops=arrowprops)
 
     ax.legend(loc='lower right')
+    plt.savefig(f'{Const.save_path}/roofline_model_bluepebble.pdf')
     plt.show()
 
 

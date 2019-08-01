@@ -1,24 +1,26 @@
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import rc
+import pandas as pd
 import os
 from sklearn import preprocessing
+import matplotlib.ticker as mtick
+import itertools
+import numpy as np
 
-dir_loc = '/Users/george/isca_python/visualisation/bcp3/whole_node/held_suarez/'
-spreadsheet_dir = '/Users/george/Dropbox/university_of_bristol/thesis/data_collection/run_measurements.xlsx'
-clusters = ['BCP3', 'BCP4', 'BP', 'Isambard']
-configs = ['Held_suarez', 'Grey_mars']
+import visualisation_constants as Const
 
-colours = {'BCP3': ''}
+# Use LaTeX fonts
+plt.rc('font', family='serif')
+rc('text', usetex=True)
 
 
 def read_resolution(resolution):
-    directory = os.fsencode(dir_loc)
+    directory = os.fsencode(Const.dir_loc)
     frames = []
     for file in os.listdir(directory):
         filename = os.fsdecode(file)
         if resolution in filename:
-            frames.append(pd.read_csv(dir_loc + filename, delimiter=','))
+            frames.append(pd.read_csv(Const.dir_loc + filename, delimiter=','))
     df = pd.concat(frames)
     return df
 
@@ -44,7 +46,7 @@ def plot_all_resolutions():
 
 def runtime_stats():
     filename = 'held_suarez_8_T85.csv'
-    df = pd.read_csv(dir_loc + filename, delimiter=',')
+    df = pd.read_csv(Const.dir_loc + filename, delimiter=',')
     df = df[df.Epoch != 'Total']
     df['Epoch'] = df['Epoch'].astype(float)
     print('Mean', df['Time'].mean())
@@ -53,7 +55,7 @@ def runtime_stats():
 
 
 def process_dataframe(sheet_name, resolution, config):
-    df = pd.read_excel(open(spreadsheet_dir, 'rb'), sheet_name=sheet_name, skiprows=2, usecols=[0, 1, 2, 3, 4])
+    df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name=sheet_name, skiprows=2, usecols=[0, 1, 2, 3, 4])
     df['Cluster'] = sheet_name
     df = df[df.Resolution == resolution]
     df = df[df['Node Resources'] == 'All']
@@ -63,33 +65,54 @@ def process_dataframe(sheet_name, resolution, config):
     return df
 
 
-def plot_scaling_graph(resolution, show_node=True):
-    df_bcp3 = process_dataframe('BCP3', resolution, 'Held_suarez')
-    df_bcp4 = process_dataframe('BCP4', resolution, 'Held_suarez')
-    df_isam = process_dataframe('Isambard', resolution, 'Held_suarez')
-    df_bp = process_dataframe('BP', resolution, 'Held_suarez')
+def plot_scaling_graph(resolution, config, show_node=True):
+    df_bcp3 = process_dataframe(Const.bcp3, resolution, config)
+    df_bcp3 = df_bcp3[df_bcp3.Cores != 32]
+    df_bcp4 = process_dataframe(Const.bcp4, resolution, config)
+    df_isam = process_dataframe(Const.isam, resolution, config)
+    df_bp = process_dataframe(Const.bp, resolution, config)
 
     fig, ax = plt.subplots()
-    df_isam.plot(kind='scatter', x='Cores', y='Runtime', ax=ax, color='red', edgecolors='black', s=30, legend=True)
-    df_bcp3.plot(kind='scatter', x='Cores', y='Runtime', ax=ax, color='orange', edgecolors='black', s=30, legend=True)
-    df_bcp4.plot(kind='scatter', x='Cores', y='Runtime', ax=ax, color='blue', edgecolors='black', s=30, legend=True)
-    df_bp.plot(kind='scatter', x='Cores', y='Runtime', ax=ax, color='green', edgecolors='black', s=30, legend=True)
 
+    df_isam.plot(kind='line', x='Cores', y='Runtime', ax=ax, color='red', style=':o', markeredgecolor='black', zorder=2)
+    df_bcp3.plot(kind='line', x='Cores', y='Runtime', ax=ax, color='magenta', style=':^', markeredgecolor='black',
+                 zorder=2)
+    df_bcp4.plot(kind='line', x='Cores', y='Runtime', ax=ax, color='blue', style=':s', markeredgecolor='black',
+                 zorder=2)
+    df_bp.plot(kind='line', x='Cores', y='Runtime', ax=ax, color='green', style=':X', markeredgecolor='black', zorder=2)
+
+    ax.set_xlim(xmin=0, xmax=max(ax.get_xlim()) + 4)
+    ax.set_ylim(ymin=0)
     ax.set_axisbelow(True)
     ax.set_ylabel('Runtime (seconds)')
     ax.minorticks_on()
     ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
     ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    ax.legend(['Isambard', 'BCP3', 'BCP4', 'Bluepebble'])
-    plt.title(f'Resolution = {resolution}')
+    ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake'], loc='upper right')
+    start, end = ax.get_xlim()
+    ax.xaxis.set_ticks(np.arange(start, end, 2 if resolution == Const.t21 else 4 if resolution == Const.t42 else 8))
+
+    # change ticks
+    fmt = '{x:,.0f}'
+    tick = mtick.StrMethodFormatter(fmt)
+    ax.yaxis.set_major_formatter(tick)
+
+    # change the style of the axis spines
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+
+    title_config = config.split('_')[0].capitalize() + '-' + config.split('_')[1].capitalize()
+    plt.title(f'Scaling graph for the {title_config} simulation \n using {resolution} resolution.')
+    plt.xlabel('Number of processor cores')
 
     if show_node:
         if resolution == 'T85':
-            ax.axvline(x=64, linewidth=3, color='red', ymin=0.5)
-        ax.axvline(x=16, linewidth=3, color='orange', ymin=0.5)
-        ax.axvline(x=28, linewidth=3, color='green', ymin=0.5)
-        ax.axvline(x=24, linewidth=3, color='blue', ymin=0.5)
-
+            ax.axvline(x=64, linewidth=1, color='red', ymin=0.5, zorder=1)
+        ax.axvline(x=16, linewidth=1, color='orange', ymin=0, zorder=1)
+        ax.axvline(x=28, linewidth=1, color='green', ymin=0, zorder=1)
+        ax.axvline(x=24, linewidth=1, color='blue', ymin=0, zorder=1)
+    plt.tight_layout()
+    plt.savefig(f'{Const.save_path}/scaling_graph_{resolution}_{config}.pdf')
     plt.show()
 
 
@@ -102,7 +125,7 @@ def fix_data():
 
 def plot_bar_graph(resolution, config):
     arr = []
-    for cluster in clusters:
+    for cluster in Const.clusters:
         df_temp = process_dataframe(cluster, resolution, config)
         df_temp_min = df_temp.loc[df_temp['Runtime'].idxmin(), :]
         arr.append(df_temp_min)
@@ -125,15 +148,15 @@ def plot_bar_graph(resolution, config):
 
 def plot_split_bar_graph(resolution):
     arr = []
-    for cluster in clusters:
-        for config in configs:
+    for cluster in Const.clusters:
+        for config in Const.configs:
             df_temp = process_dataframe(cluster, resolution, config)
             df_temp_min = df_temp.loc[df_temp['Runtime'].idxmin(), :]
             arr.append(df_temp_min)
     df = pd.DataFrame(arr)
-    df_plot = pd.DataFrame([df[(df.Config == config)]['Runtime'].reset_index(drop=True) for config in configs],
-                           index=configs).T
-    df_plot.rename(index={0: 'BCP3', 1: 'BCP4', 2: 'BP', 3: 'Isambard'}, inplace=True)
+    df_plot = pd.DataFrame([df[(df.Config == config)]['Runtime'].reset_index(drop=True) for config in Const.configs],
+                           index=Const.configs).T
+    df_plot.rename(index={0: Const.bcp3, 1: Const.bcp4, 2: Const.bp, 3: Const.isam}, inplace=True)
     axes = df_plot.plot.bar(rot=0, subplots=True, edgecolor="black", linewidth=0.5)
     for ax in axes:
         ax.set_axisbelow(True)
@@ -168,10 +191,11 @@ def plot_total_program():
 def main():
     # plot_total_program()
     # plot_split_bar_graph('T42')
-    # plot_scaling_graph('T21')
-    # plot_scaling_graph('T42')
-    # plot_scaling_graph('T85')
-    plot_bar_graph('T42', 'Held_suarez')
+    plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
+    plot_pairs.remove((Const.t85, Const.grey_mars))
+    [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]
+    # df_bcp3 = process_dataframe(Const.bcp3, Const.t85, Const.held_suarez)
+    # plot_bar_graph('T42', 'Held_suarez')
 
 
 if __name__ == '__main__':
