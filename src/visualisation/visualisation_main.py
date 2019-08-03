@@ -190,7 +190,7 @@ def plot_total_program():
 
 def main():
     # plot_total_program()
-    # plot_split_bar_graph('T42')
+    plot_split_bar_graph('T42')
     plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
     plot_pairs.remove((Const.t85, Const.grey_mars))
     [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]

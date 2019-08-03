@@ -11,6 +11,12 @@ dir_loc = '/Users/george/isca_python/visualisation/bcp3/whole_node/held_suarez/'
 spreadsheet_dir = '/Users/george/Dropbox/university_of_bristol/thesis/data_collection/run_measurements.xlsx'
 save_path = '/Users/george/Dropbox/university_of_bristol/thesis/Thesis/img'
 
+# Compiler names
+gnu = 'GNU'
+intel = 'Intel'
+cce = 'CCE'
+arm = 'Arm'
+
 # Cluster names
 bcp3 = 'BCP3'
 bcp4 = 'BCP4'
