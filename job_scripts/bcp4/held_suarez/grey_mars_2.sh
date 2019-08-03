@@ -1,13 +1,13 @@
 #!/bin/bash
 
-#SBATCH --job-name=benchmark_grey_mars_four_cores
+#SBATCH --job-name=benchmark_held_suarez_two_cores
 #SBATCH --partition=cpu
-#SBATCH --time=5-00:00:00
+#SBATCH --time=14-00:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=16
 #number of cpus (cores) per task (process)
 #SBATCH --cpus-per-task=1
-#SBATCH --output=grey_mars_four_cores_%j.o
+#SBATCH --output=held_suarez_two_cores_%j.o
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=qv18258@bristol.ac.uk
 
@@ -23,4 +23,4 @@ source $GFDL_BASE/src/extra/env/bristol-bc4
 source activate isca_env
 
 
-$HOME/.conda/envs/isca_env/bin/python $BENCHMARK_ISCA/src/main.py -mincores 4 -maxcores 4 -r T21 -r T42 -r T85 -codebase grey_mars
+$HOME/.conda/envs/isca_env/bin/python $BENCHMARK_ISCA/src/main.py -mincores 2 -maxcores 2 -r T21 -r T42 -codebase held_suarez -fc gcc

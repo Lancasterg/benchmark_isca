@@ -1,8 +1,0 @@
-#!/bin/sh
-#PBS -q arm
-#PBS -l select=1:ncpus=64
-#PBS -l walltime=23:00:00
-#PBS -M =qv18258@bristol.ac.uk
-
-source ~/isca_env/bin/activate
-python $BENCHMARK_ISCA/src/trace_craypat.py -mincores 8 -maxcores 8 -r T21 -r T42 -r T85 -codebase held_suarez
