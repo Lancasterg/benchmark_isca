@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=benchmark_held_suarez_eight_cores
 #SBATCH --partition=cpu
-#SBATCH --time=14-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=16
+#SBATCH --ntasks-per-node=24
 #number of cpus (cores) per task (process)
 #SBATCH --cpus-per-task=1
 #SBATCH --output=held_suarez_eight_cores_%j.o

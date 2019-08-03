@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=benchmark_grey_mars_one_core
 #SBATCH --partition=cpu
-#SBATCH --time=14-00:00:00
+#SBATCH --time=4-00:00:00
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=16
+#SBATCH --ntasks-per-node=24
 #number of cpus (cores) per task (process)
 #SBATCH --cpus-per-task=1
 #SBATCH --output=held_suarez_one_core_%j.o
