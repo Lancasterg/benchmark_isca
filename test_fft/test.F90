@@ -16,14 +16,14 @@ integer :: lot
 real(kind=8)   , allocatable :: ain(:,:), aout(:,:)
 complex(kind=8), allocatable :: four(:,:)
 integer :: i, j, m, n, k, h, iter
-integer :: ntrans(3) = (/ 128, 256, 512 /)
-integer :: lots(3) = (/ 64, 128, 256 /)
+integer :: ntrans(4) = (/ 64 ,128, 256, 512 /)
+integer :: lots(4) = (/32, 64, 128, 256 /)
 real :: start_time = 0, stop_time = 0, mean_time_iter = 0, mean_time_full = 0, append_time = 0
 real :: time_3d_start = 0, time_3d_stop = 0
 iter = 100
 
 ! test multiple transform lengths
-  do m = 1, 3
+  do m = 1, 4
 
   ! set up input data
     n = ntrans(m)
