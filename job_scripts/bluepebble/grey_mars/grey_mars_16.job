@@ -1,5 +1,5 @@
 #!/bin/sh
-#PBS -l select=1:ncpus=28:mem=10GB
+#PBS -l select=1:ncpus=28:mem=20GB
 #PBS -l walltime=72:00:00
 
 module load tools/git/2.22.0
