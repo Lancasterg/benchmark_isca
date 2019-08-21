@@ -5,10 +5,8 @@ import matplotlib.ticker as mtick
 from matplotlib import rc
 import numpy as np
 
-# Use LaTeX fonts
-plt.rc('font', family='serif')
-rc('text', usetex=True)
-plt.rcParams.update({'font.size': 11})
+import latex_fonts
+
 
 
 def main():

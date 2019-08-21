@@ -1,6 +1,9 @@
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib import rc
+import matplotlib as mpl
+import latex_fonts
+from matplotlib.patches import Patch
 
 import visualisation_constants as Const
 
@@ -20,11 +23,11 @@ labels = {h: ['Sandy Bridge', 'Broadwell', 'Thunderx2'], g: ['Sandy Bridge', 'Br
 
 def plot_compiler_data(config, ax, res):
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name='compilers', skiprows=0,
-                       usecols='A:I')
+                       usecols='A:E')
     df = df[df.Resolution == res]
     df = df[df.Config == config]
-    colours = ["#3a7ca5", '#60b564', "#d00000"]
-    df.plot.bar(x='Cluster', rot=0, color=colours, edgecolor="black", linewidth=1, ax=ax, legend=False)
+    colours = ["#3a7ca5", '#60b564']
+    barlist = df.plot.bar(x='Cluster', rot=0, color=colours, edgecolor="black", linewidth=1, ax=ax, legend=False)
 
     ax.yaxis.grid(True)
     ax.set_axisbelow(True)
@@ -42,25 +45,35 @@ def plot_compiler_data(config, ax, res):
     ax.set_xticklabels(labels[config])
 
 
+def red_bar(ax):
+    bars = [rect for rect in ax.get_children() if isinstance(rect, mpl.patches.Rectangle)]
+    bars[len(bars) - 2].set_facecolor('#d00000')
+
+
 def main():
-    res = 'T42'
-    fig, axes = plt.subplots(2, 2, figsize=(10, 6))
+    legend_elements = [Patch(facecolor='#3a7ca5', edgecolor='black',
+                             label='ICC'),
+                       Patch(facecolor='#60b564', edgecolor='black',
+                             label='GCC'),
+                       Patch(facecolor='#d00000', edgecolor='black',
+                             label='CCE')
+                       ]
+
+    fig, axes = plt.subplots(2, 2, figsize=(9, 6))
     plot_compiler_data('Held-Suarez', axes[0, 0], 'T21')
     plot_compiler_data('Held-Suarez', axes[0, 1], 'T42')
     plot_compiler_data('Grey-Mars', axes[1, 0], 'T21')
     plot_compiler_data('Grey-Mars', axes[1, 1], 'T42')
 
-    # plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=5)
-    # axes[0, 0].get_legend().remove()
-    axes[0, 0].set_ylabel('Wallclock runtime (seconds)')
-    handles, labels = axes[0, 0].get_legend_handles_labels()
+    red_bar(axes[0, 0])
+    red_bar(axes[0, 1])
 
+    axes[0, 0].set_ylabel('Wallclock runtime (seconds)')
     axes[1, 0].set_xlabel('Processor family')
     axes[1, 1].set_xlabel('Processor family')
 
-    fig.legend(handles, ['Intel', 'GNU', 'CCE'], loc=(0.35, 0), ncol=5)
-    # plt.xlabel("common X")
-    # fig.xlabel('Processor Family')
+    fig.legend(legend_elements, ['ICC', 'GNU', 'CCE'], loc=(0.35, 0), ncol=5)
+    fig.subplots_adjust(bottom=0.13)
     plt.tight_layout()
     plt.savefig(f'{Const.save_path}/compiler-comparison.pdf')
     plt.show()

@@ -9,9 +9,8 @@ import numpy as np
 
 import visualisation_constants as Const
 
-# Use LaTeX fonts
-plt.rc('font', family='serif')
-rc('text', usetex=True)
+import latex_fonts
+
 
 
 def read_resolution(resolution):
@@ -77,14 +76,13 @@ def lookup_scale(resolution, config):
     return scale[config]
 
 
-
 def plot_scaling_graph(resolution, config, show_node=True):
     df_bcp3 = process_dataframe(Const.bcp3, resolution, config)
     df_bcp4 = process_dataframe(Const.bcp4, resolution, config)
     df_isam = process_dataframe(Const.isam, resolution, config)
     df_bp = process_dataframe(Const.bp, resolution, config)
 
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(7, 3.5))
 
     df_isam.plot(kind='line', x='Cores', y='Runtime', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,
                  zorder=2)
@@ -107,9 +105,9 @@ def plot_scaling_graph(resolution, config, show_node=True):
     ax.xaxis.set_ticks(Const.xtick_dict[resolution])
 
     # y ticks
-    fmt = '{x:,.0f}'
-    tick = mtick.StrMethodFormatter(fmt)
-    ax.yaxis.set_major_formatter(tick)
+    # fmt = '{x:,.0f}'
+    # tick = mtick.StrMethodFormatter(fmt)
+    # ax.yaxis.set_major_formatter(tick)
 
     ax.yaxis.set_ticks(lookup_scale(resolution, config))
 
@@ -183,24 +181,46 @@ def plot_split_bar_graph(resolution):
     plt.show()
 
 
-def plot_total_program():
-    data_list = ['bcp3/grey_mars_16_T42.csv', 'bcp4/grey_mars_16_T42.csv', 'isambard/grey_mars_32_T42.csv']
+def remove_total(df):
+    return df[df.Epoch != 'Total']
+
+
+def plot_total_program(config):
+    df_bcp3 = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/bcp3/{config}_16_T42.csv', skiprows=0))
+    df_bcp4 = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/bcp4/{config}_16_T42.csv', skiprows=0))
+    df_bp = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/bluepebble/{config}_16_T42.csv', skiprows=0))
+    df_isam = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/isambard/{config}_32_T42.csv', skiprows=0))
+
     plt.figure()
-    ax = plt.gca()
-    for data in data_list:
-        df = pd.read_csv(f'/Users/george/benchmark_isca/data/{data}', skiprows=0)
-        df = df[df.Epoch != 'Total']
-        times = df[['Time']].values.astype(float)
-        min_max_scaler = preprocessing.MinMaxScaler()
-        times_scaled = min_max_scaler.fit_transform(times)
-        df['Time'] = times_scaled
-        df.plot(x='Epoch', y='Time', ax=ax, style='-o')
+    fig, ax = plt.subplots(figsize=(7, 4))
+
+    df_isam.plot(kind='line', x='Epoch', y='Time', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,
+                 zorder=2)
+    df_bcp3.plot(kind='line', x='Epoch', y='Time', ax=ax, color='magenta', style=':^', markeredgecolor='black',
+                 ms=5,
+                 zorder=2)
+    df_bcp4.plot(kind='line', x='Epoch', y='Time', ax=ax, color='blue', style=':s', markeredgecolor='black',
+                 ms=5,
+                 zorder=2)
+    df_bp.plot(kind='line', x='Epoch', y='Time', ax=ax, color='green', style=':X', markeredgecolor='black', ms=5,
+               zorder=2)
 
     ax.set_axisbelow(True)
-    ax.set_ylabel('Wallclock runtime (normalised)')
+    ax.set_ylabel('Wallclock runtime per 1 epoch')
     ax.minorticks_on()
     ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
     ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
+
+    plt.title(f'{"Held-Suarez" if config=="held_suarez" else "Grey-Mars"} at T42 resolution', fontweight='bold')
+
+    ax.set_xlim(xmin=0, xmax=max(ax.get_xlim()) + 1)
+
+    ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake'], loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, shadow=True, ncol=4)
+    plt.tight_layout()
+    print(f'{Const.save_path}/{config}-variation.pdf')
+    plt.savefig(f'{Const.save_path}/{config}-variation.pdf')
     plt.show()
 
 
@@ -215,7 +235,13 @@ def plot_speedup(resolution, config):
     calc_speedup(df_bp)
     calc_speedup(df_isam)
 
-    ax = plt.gca()
+    if resolution == Const.t85 and config == Const.held_suarez:
+        print('isam', df_isam)
+        print('bcp3', df_bcp3)
+        print('bcp4', df_bcp4)
+        print('bp', df_bp)
+
+    fig, ax = plt.subplots(figsize=(7, 3.5))
     scale = calc_scale(resolution)
     perfect = np.linspace(0, scale, scale + 1)
     plt.plot(perfect, perfect, color='black', linestyle=':')
@@ -236,7 +262,11 @@ def plot_speedup(resolution, config):
     plt.xlabel('Number of processor cores')
     ax.legend(['Linear scaling', 'ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake'], loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
-              fancybox=True, shadow=True, ncol=3)
+              fancybox=True, shadow=True, ncol=5)
+
+    ax.yaxis.grid(True)
+    ax.set_axisbelow(True)
+    ax.yaxis.grid(which='major', linestyle=':', linewidth='0.5', color='black')
 
     # plt.yscale('log')
     # change the style of the axis spines
@@ -269,12 +299,13 @@ def calc_scale(resolution):
 
 
 def main():
-    # plot_total_program()
+    plot_total_program('held_suarez')
+    plot_total_program('grey_mars')
     # plot_split_bar_graph('T42')
-    plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
-    plot_pairs.remove((Const.t85, Const.grey_mars))
-    [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]
-    [plot_speedup(item[0], item[1]) for item in plot_pairs]
+    # plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
+    # plot_pairs.remove((Const.t85, Const.grey_mars))
+    # [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]
+    # [plot_speedup(item[0], item[1]) for item in plot_pairs]
 
     # df_bcp3 = process_dataframe(Const.bcp3, Const.t85, Const.held_suarez)
     # plot_bar_graph('T42', 'Held_suarez')

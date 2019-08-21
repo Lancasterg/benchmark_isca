@@ -7,9 +7,7 @@ from matplotlib import rc
 
 import visualisation_constants as Const
 
-# Use LaTeX fonts
-plt.rc('font', family='serif')
-rc('text', usetex=True)
+import latex_fonts
 
 
 def main():

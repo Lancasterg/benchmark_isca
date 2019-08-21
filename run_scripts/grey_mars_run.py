@@ -220,6 +220,8 @@ if __name__ == "__main__":
                 exp.namelist['mixed_layer_nml']['depth'] = depth_val
                 exp.namelist['astronomy_nml']['per'] = per_value
 
+
                 exp.run(1, use_restart=False, num_cores=NCORES)
                 for i in range(2, 241):
                     exp.run(i, num_cores=NCORES)
+

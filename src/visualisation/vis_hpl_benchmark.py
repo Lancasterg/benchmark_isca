@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib import rc
 import pandas as pd
+import latex_fonts
 
 import visualisation_constants as Const
 

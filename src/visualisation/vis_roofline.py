@@ -6,9 +6,7 @@ import pandas as pd
 
 import visualisation_constants as Const
 
-# Use LaTeX fonts
-plt.rc('font', family='serif')
-rc('text', usetex=True)
+import latex_fonts
 
 # Performance as measured from BluePebble
 program_total_performance = 1.54  # GFLOPS
@@ -186,5 +184,5 @@ def drawArrow(A, B, ax):
 
 
 if __name__ == '__main__':
-    # plot_original_roofline()
+    plot_original_roofline()
     plot_opt_roofline()

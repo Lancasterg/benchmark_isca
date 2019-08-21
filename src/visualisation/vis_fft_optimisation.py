@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from matplotlib import rc
+import latex_fonts
 
 import visualisation_constants as Const
 
@@ -66,7 +68,7 @@ def plot_data(ax, df, res):
     ax.spines['right'].set_color('none')
 
 
-def main():
+def plot_fft_bar():
     fig, axes = plt.subplots(2, 2, figsize=(10, 6))
 
     df = read_fftw_data(Const.isam)
@@ -92,17 +94,61 @@ def main():
     plt.savefig(f'{Const.save_path}/compare_fft.pdf')
     plt.show()
 
-    # plot_fft_data(Const.bcp3, axes[0, 0])
-    # plot_fft_data(Const.bcp4, axes[0, 1])
-    # plot_fft_data(Const.bp, axes[1, 0])
-    # plot_fft_data(Const.isam, axes[1, 1])
-    #
 
-    # axes[0, 1].set_ylabel('')
-    # axes[1, 1].set_ylabel('')
-    # plt.tight_layout()
-    # plt.savefig(f'{Const.save_path}/compare_fft.pdf')
-    # plt.show()
+def calc_speedup(df):
+    df['Speedup'] = df['vanilla-full'] / df['fftw-full']
+    df['x-axis'] = np.linspace(1, 4, 4)
+    print(df)
+    return df
+
+
+def plot_fft_speedup():
+    df_isam = calc_speedup(read_fftw_data(Const.isam))
+    df_bcp3 = calc_speedup(read_fftw_data(Const.bcp3))
+    df_bcp4 = calc_speedup(read_fftw_data(Const.bcp4))
+    df_bp = calc_speedup(read_fftw_data(Const.bp))
+
+    size = 20
+    lw = 1
+    edgecolor = 'black'
+
+    ax = plt.gca()
+    df_isam.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,
+                 zorder=2)
+    df_bcp3.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='magenta', style=':^', markeredgecolor='black', ms=5,
+                 zorder=2)
+    df_bcp4.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='blue', style=':s', markeredgecolor='black', ms=5,
+                 zorder=2)
+    df_bp.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='green', style=':X', markeredgecolor='black', ms=5,
+               zorder=2)
+
+    ax.set_xlim(xmin=0, xmax=max(ax.get_xlim()) + 0.5)
+    # change the style of the axis spines
+    ax.spines['top'].set_color('none')
+    ax.spines['right'].set_color('none')
+
+    plt.title("Speedup of FFTW relative to Temperton's FFT")
+    plt.ylabel("Speedup relative to Temperton's FFT")
+    plt.xlabel('Size of FFT')
+    ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake'], loc='upper center',
+              bbox_to_anchor=(0.5, -0.2),
+              fancybox=True, shadow=True, ncol=4)
+
+    ax.yaxis.grid(True)
+    ax.set_axisbelow(True)
+    ax.yaxis.grid(which='major', linestyle=':', linewidth='0.5', color='black')
+    ax.set_ylim(ymin=0)
+
+    plt.tight_layout()
+    save_path = f'{Const.save_path}/speedup-fft.pdf'
+    print(save_path)
+    plt.savefig(save_path)
+    plt.show()
+
+
+def main():
+    plot_fft_speedup()
+    # plot_fft_bar()
 
 
 if __name__ == '__main__':
