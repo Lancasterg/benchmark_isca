@@ -74,7 +74,7 @@ def main():
     axes[1, 0].set_xlabel('Processor family')
     axes[1, 1].set_xlabel('Processor family')
 
-    fig.legend(legend_elements, ['ICC', 'GNU', 'CCE'], loc=(0.35, 0), ncol=5)
+    fig.legend(legend_elements, ['ICC', 'GNU', 'CCE'], loc=(0.38, 0), ncol=5)
     fig.subplots_adjust(bottom=0.13)
     plt.tight_layout()
     plt.savefig(f'{Const.save_path}/compiler-comparison.pdf')

@@ -11,10 +11,10 @@ import latex_fonts
 
 def main():
     fig, ax = plt.subplots(figsize=(8, 4))
-    Const.clusters.remove(Const.bcp4)
+    # Const.clusters.remove(Const.bcp4)
     # Const.clusters.remove(Const.isam)
     line_colors = {Const.isam: 'red', Const.bcp3: 'magenta', Const.bcp4: 'blue', Const.bp: 'green'}
-    line_colors_kind_4 = {Const.isam: 'orange', Const.bcp3: 'purple', Const.bcp4: 'yellow', Const.bp: 'brown'}
+    line_colors_kind_4 = {Const.isam: 'orange', Const.bcp3: 'purple', Const.bcp4: 'cyan', Const.bp: 'brown'}
     line_styles = {Const.isam: ':o', Const.bcp3: ':^', Const.bcp4: ':s', Const.bp: ':X'}
 
     for cluster in Const.clusters:
@@ -50,7 +50,7 @@ def nice_ax(ax, resolution):
     # ax.minorticks_on()
     # ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
     # ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=3)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=4)
     start, end = ax.get_xlim()
     ax.xaxis.set_ticks(np.arange(start, end, 2 if resolution == Const.t21 else 4 if resolution == Const.t42 else 8))
 

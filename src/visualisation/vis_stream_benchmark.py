@@ -8,15 +8,14 @@ import numpy as np
 import latex_fonts
 
 
-
 def main():
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name='benchmarks', skiprows=1,
                        usecols='A:M')
     for cluster in Const.clusters:
         df[cluster] = df[cluster] / 1000
 
-    df.plot.line(x='Threads', style=['m:^', 'b:s', 'g:X', 'r:o'], markeredgecolor='black')
-    ax = plt.gca()
+    fig, ax = plt.subplots(figsize=(7, 3.5))
+    df.plot.line(x='Threads', style=['m:^', 'b:s', 'g:X', 'r:o'], markeredgecolor='black', ax=ax)
     nice_ax(ax)
     plt.savefig(f'{Const.save_path}/stream-triad.pdf')
     plt.show()

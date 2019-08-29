@@ -5,10 +5,7 @@ from matplotlib import rc
 from matplotlib.lines import Line2D
 
 import visualisation_constants as Const
-
-# Use LaTeX fonts
-plt.rc('font', family='serif')
-rc('text', usetex=True)
+import latex_fonts
 
 size = 20
 lw = 1
@@ -94,7 +91,7 @@ def plot_data(resolution, config, ax):
 
     ax.set_ylim(ymin=0)
     title_config = config.split('_')[0].capitalize() + '-' + config.split('_')[1].capitalize()
-    ax.set_title(f'{title_config} simulation at {resolution}')
+    ax.set_title(f'{title_config} {resolution}')
 
     return [a, b, c, d]
 
