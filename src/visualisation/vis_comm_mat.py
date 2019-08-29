@@ -141,12 +141,13 @@ def plot_percentage_comms():
     ax.set_axisbelow(True)
     ax.yaxis.grid(which='major', linestyle=':', linewidth='0.5', color='black')
     ax.legend(['Held-Suarez', 'Grey-Mars'], loc='upper center',
-              bbox_to_anchor=(0.15, -0.1),
+              bbox_to_anchor=(0.175, -0.1),
               fancybox=True, shadow=True, ncol=2)
     plt.ylabel('Percentage of runtime spent in MPI')
-    plt.xlabel('Process')
+    plt.xlabel('Processor rank')
     plt.title('Percentage of runtime spent in MPI')
     plt.xticks(np.linspace(0, 15, 16, dtype=np.int), np.linspace(0, 15, 16, dtype=np.int))
+    # fig.subplots_adjust(bottom=0.13)
     plt.tight_layout()
     plt.savefig(f'{Const.save_path}/mpi-barrier-time.pdf')
     plt.show()

@@ -67,7 +67,7 @@ def plot_data(resolution, config, ax):
     # print(df_isam)
 
     if resolution == Const.t42 and config == Const.grey_mars:
-        print(df_bp)
+        print(df_isam)
 
     a = df_isam.plot(kind='scatter', x='Cores', y=Const.per_grid, ax=ax, color='red', marker='o', s=size,
                      zorder=2, lw=lw, edgecolor=edgecolor, legend=True)

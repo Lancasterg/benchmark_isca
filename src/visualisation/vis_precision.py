@@ -4,14 +4,13 @@ import matplotlib.ticker as mtick
 import numpy as np
 from matplotlib import rc
 
-
 import visualisation_constants as Const
 
 import latex_fonts
 
 
 def main():
-    ax = plt.gca()
+    fig, ax = plt.subplots(figsize=(8, 4))
     Const.clusters.remove(Const.bcp4)
     # Const.clusters.remove(Const.isam)
     line_colors = {Const.isam: 'red', Const.bcp3: 'magenta', Const.bcp4: 'blue', Const.bp: 'green'}
@@ -26,9 +25,9 @@ def main():
         df_temp.plot(x='Cores', y='kind_4', ax=ax, color=line_colors_kind_4[cluster], style=line_styles[cluster],
                      markeredgecolor='black', label=f'SP {Const.cluster_proc[cluster]}')
     nice_ax(ax, Const.t42)
-    plt.title('Wallclock runtime for single and double precision floating\n' +
-              'point numbers for the Held-Suarez configuration at T42 resolution')
+    plt.title('Single vs double precision floating point numbers, Held-Suarez T42')
     plt.tight_layout()
+    # fig.subplots_adjust(bottom=0.13)
     plt.savefig(f'{Const.save_path}/single-double-precision.pdf')
     plt.show()
 
@@ -51,7 +50,7 @@ def nice_ax(ax, resolution):
     # ax.minorticks_on()
     # ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
     # ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=3)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=3)
     start, end = ax.get_xlim()
     ax.xaxis.set_ticks(np.arange(start, end, 2 if resolution == Const.t21 else 4 if resolution == Const.t42 else 8))
 

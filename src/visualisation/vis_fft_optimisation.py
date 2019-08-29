@@ -80,6 +80,12 @@ def plot_fft_bar():
     plot_data(axes[0, 1], df, '128x64')
     plot_data(axes[1, 0], df, '256x128')
     plot_data(axes[1, 1], df, '512x256')
+
+    axes[0, 0].set_title(r'64$\times$32 (T21)')
+    axes[0, 1].set_title(r'128$\times$64 (T42)')
+    axes[1, 0].set_title(r'256$\times$128 (T85)')
+    axes[1, 1].set_title(r'512$\times$256 (T170)')
+
     axes[0, 1].set_ylabel('')
     axes[1, 1].set_ylabel('')
 
@@ -89,8 +95,9 @@ def plot_fft_bar():
     axes[1, 1].set_xlabel('Processor Family')
 
     handles, labels = axes[0, 0].get_legend_handles_labels()
-    fig.legend(handles, ['Temperton FFT', 'FFTW'], loc=(0.35, 0), ncol=5)
+    fig.legend(handles, ['Temperton FFT', 'FFTW'], loc=(0.4, 0), ncol=5)
     plt.tight_layout()
+    fig.subplots_adjust(bottom=0.15)
     plt.savefig(f'{Const.save_path}/compare_fft.pdf')
     plt.show()
 
@@ -112,12 +119,14 @@ def plot_fft_speedup():
     lw = 1
     edgecolor = 'black'
 
-    ax = plt.gca()
+    fig, ax = plt.subplots(figsize=(7, 3.25))
     df_isam.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,
                  zorder=2)
-    df_bcp3.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='magenta', style=':^', markeredgecolor='black', ms=5,
+    df_bcp3.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='magenta', style=':^', markeredgecolor='black',
+                 ms=5,
                  zorder=2)
-    df_bcp4.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='blue', style=':s', markeredgecolor='black', ms=5,
+    df_bcp4.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='blue', style=':s', markeredgecolor='black',
+                 ms=5,
                  zorder=2)
     df_bp.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='green', style=':X', markeredgecolor='black', ms=5,
                zorder=2)
@@ -127,18 +136,19 @@ def plot_fft_speedup():
     ax.spines['top'].set_color('none')
     ax.spines['right'].set_color('none')
 
-    plt.title("Speedup of FFTW relative to Temperton's FFT")
-    plt.ylabel("Speedup relative to Temperton's FFT")
+    # plt.title("Speedup of FFTW relative to Temperton's FFT")
+    plt.ylabel("Speedup relative to \nTemperton's FFT")
     plt.xlabel('Size of FFT')
     ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake'], loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
               fancybox=True, shadow=True, ncol=4)
+    plt.xticks([0, 1, 2, 3],
+               [r'64$\times$32 (T21)', r'128$\times$64 (T42)', r'256$\times$128 (T85)', r'512$\times$128 (T21)'])
 
     ax.yaxis.grid(True)
     ax.set_axisbelow(True)
     ax.yaxis.grid(which='major', linestyle=':', linewidth='0.5', color='black')
     ax.set_ylim(ymin=0)
-
     plt.tight_layout()
     save_path = f'{Const.save_path}/speedup-fft.pdf'
     print(save_path)
@@ -148,7 +158,7 @@ def plot_fft_speedup():
 
 def main():
     plot_fft_speedup()
-    # plot_fft_bar()
+    plot_fft_bar()
 
 
 if __name__ == '__main__':

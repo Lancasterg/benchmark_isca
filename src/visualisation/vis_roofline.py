@@ -44,39 +44,39 @@ def plot_original_roofline():
     dram_x = [0.0001, 5.97, 100]
     dram_y = [0.0057, 584.99, 584.99]
     plot_roof_line(dram_x, dram_y, ax, 'grey')
-    ax.text(0.00025, 0.018, 'DRAM Bandwidth 98.06GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 0.018, 'DRAM Bandwidth 98.06GB/sec', fontsize=10, rotation=23)
 
     # plot L3 cache line
     l3_x = [0.0001, 1.4, 5.97]
     l3_y = [0.026, 584.99, 584.99]
     plot_roof_line(l3_x, l3_y, ax, 'red')
-    ax.text(0.00025, 0.08, 'L3 Bandwidth 429.28GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 0.08, 'L3 Bandwidth 429.28GB/sec', fontsize=10, rotation=23)
 
     # plot L2 cache line
     l2_x = [0.0001, 0.16, 1.4]
     l2_y = [0.23, 584.99, 584.99]
     plot_roof_line(l2_x, l2_y, ax, 'orange')
-    ax.text(0.00025, 0.72, 'L2 Bandwidth 3628.36GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 0.72, 'L2 Bandwidth 3628.36GB/sec', fontsize=10, rotation=23)
 
     # plot L1 cache line
     l1_x = [0.0001, 0.076, 0.16]
     l1_y = [0.48, 584.99, 584.99]
     plot_roof_line(l1_x, l1_y, ax, 'green')
-    ax.text(0.00025, 1.55, 'L1 Bandwidth 7724.67GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 1.55, 'L1 Bandwidth 7724.67GB/sec', fontsize=10, rotation=23)
 
     # Peak GFLOPS
     peak = (1, 1000)
     plt.text(peak[0], peak[1], 'DP Vector Peak = 584.99', fontsize=12)
 
     ax.scatter(program_total_ai, program_total_performance, edgecolor='black', linewidth='1', color='purple',
-               label=f'Held-Suarez T42 performance', zorder=2)
+               label=f'Held-Suarez T42', zorder=2)
     ax.annotate(f'{program_total_performance} GFLOPS\n{program_total_ai} FLOP/Byte',
                 xy=(program_total_ai, program_total_performance),
                 xytext=(0.015, 0.13),
                 arrowprops=arrowprops)
 
     ax.scatter(grey_mars_ai_t42, grey_mars_performance_t42, edgecolor='black', linewidth='1', color='blue',
-               label=f'Grey-Mars T42 performance', zorder=2)
+               label=f'Grey-Mars T42', zorder=2)
     ax.annotate(f'{grey_mars_performance_t42} GFLOPS\n{grey_mars_ai_t42} FLOP/Byte',
                 xy=(grey_mars_ai_t42, grey_mars_performance_t42),
                 xytext=(grey_mars_ai_t42 + 0.1, 1.5),
@@ -89,21 +89,21 @@ def plot_original_roofline():
     #             xytext=(program_total_ai + 0.1, 10),
     #             arrowprops=arrowprops)
 
-    ax.scatter(5.69, 0.22, edgecolor='black', linewidth='1', color='red', label='Loop in fft99.F90',
+    ax.scatter(5.69, 0.22, edgecolor='black', linewidth='1', color='red', label=r'Loop $x$ (\texttt{vpassm:1081})',
                zorder=2)
     ax.annotate(f'{0.22} GFLOPS\n{5.69} FLOP/Byte',
                 xy=(5.69, 0.22),
                 xytext=(10.5, 0.15),
                 arrowprops=arrowprops)
 
-    ax.scatter(4.22, 0.14, edgecolor='black', linewidth='1', color='orange', label='Loop in fft99.F90',
+    ax.scatter(4.22, 0.14, edgecolor='black', linewidth='1', color='orange', label=r'Loop $y$ (\texttt{vpassm:1049})',
                zorder=2)
     ax.annotate(f'{0.14} GFLOPS\n{4.22} FLOP/Byte',
                 xy=(4.22, 0.14),
                 xytext=(10.5, 0.015),
                 arrowprops=arrowprops)
 
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=2)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.1), fancybox=True, shadow=True, ncol=4)
     plt.tight_layout()
     plt.savefig(f'{Const.save_path}/roofline_model_bluepebble.pdf')
     plt.show()
@@ -113,7 +113,7 @@ def plot_opt_roofline():
     plt.figure(figsize=(10, 6), dpi=300)
     plt.ylabel('GFLOPS/Second (SIMD)')
     plt.xlabel('Operational Intensity (FLOPS/byte)')
-    plt.title('Roofline model of Isca running on 16 Intel Xeon Gold 6126 cores at 2.6GHz\n (Skylake)')
+    plt.title('Roofline model of Isca running on 16 Intel Xeon Gold 6126 cores at 2.6 GHz\n (Skylake)')
     ax = plt.gca()
     ax.axis([0.0001, 100, 0.0001, 10000])
     ax.loglog()
@@ -125,25 +125,25 @@ def plot_opt_roofline():
     dram_x = [0.0001, 5.97, 100]
     dram_y = [0.0057, 584.99, 584.99]
     plot_roof_line(dram_x, dram_y, ax, 'grey')
-    ax.text(0.00025, 0.018, 'DRAM Bandwidth 98.06GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 0.018, 'DRAM Bandwidth 98.06GB/sec', fontsize=10, rotation=23)
 
     # plot L3 cache line
     l3_x = [0.0001, 1.4, 5.97]
     l3_y = [0.026, 584.99, 584.99]
     plot_roof_line(l3_x, l3_y, ax, 'red')
-    ax.text(0.00025, 0.08, 'L3 Bandwidth 429.28GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 0.08, 'L3 Bandwidth 429.28GB/sec', fontsize=10, rotation=23)
 
     # plot L2 cache line
     l2_x = [0.0001, 0.16, 1.4]
     l2_y = [0.23, 584.99, 584.99]
     plot_roof_line(l2_x, l2_y, ax, 'orange')
-    ax.text(0.00025, 0.72, 'L2 Bandwidth 3628.36GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 0.72, 'L2 Bandwidth 3628.36GB/sec', fontsize=10, rotation=23)
 
     # plot L1 cache line
     l1_x = [0.0001, 0.076, 0.16]
     l1_y = [0.48, 584.99, 584.99]
     plot_roof_line(l1_x, l1_y, ax, 'green')
-    ax.text(0.00025, 1.55, 'L1 Bandwidth 7724.67GB/sec', fontsize=10, rotation=25)
+    ax.text(0.00025, 1.55, 'L1 Bandwidth 7724.67GB/sec', fontsize=10, rotation=23)
 
     # Peak GFLOPS
     peak = (1, 1000)

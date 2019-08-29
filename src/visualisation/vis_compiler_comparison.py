@@ -69,6 +69,8 @@ def main():
     red_bar(axes[0, 1])
 
     axes[0, 0].set_ylabel('Wallclock runtime (seconds)')
+    axes[1, 0].set_ylabel('Wallclock runtime (seconds)')
+
     axes[1, 0].set_xlabel('Processor family')
     axes[1, 1].set_xlabel('Processor family')
 

@@ -12,7 +12,6 @@ import visualisation_constants as Const
 import latex_fonts
 
 
-
 def read_resolution(resolution):
     directory = os.fsencode(Const.dir_loc)
     frames = []
@@ -116,7 +115,7 @@ def plot_scaling_graph(resolution, config, show_node=True):
     ax.spines['right'].set_color('none')
 
     title_config = config.split('_')[0].capitalize() + '-' + config.split('_')[1].capitalize()
-    plt.title(f'Wallclock runtime for the {title_config} simulation using {resolution} resolution')
+    plt.title(f'{title_config} configuration at {resolution} resolution')
     plt.xlabel('Number of processor cores')
 
     if show_node:
@@ -206,7 +205,8 @@ def plot_total_program(config):
                zorder=2)
 
     ax.set_axisbelow(True)
-    ax.set_ylabel('Wallclock runtime per 1 epoch')
+    ax.set_ylabel('Wallclock runtime per 1 epoch\n (seconds)')
+    ax.set_xlabel('Epoch of simulation')
     ax.minorticks_on()
     ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
     ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
@@ -242,9 +242,6 @@ def plot_speedup(resolution, config):
         print('bp', df_bp)
 
     fig, ax = plt.subplots(figsize=(7, 3.5))
-    scale = calc_scale(resolution)
-    perfect = np.linspace(0, scale, scale + 1)
-    plt.plot(perfect, perfect, color='black', linestyle=':')
 
     df_isam.plot(kind='line', x='Cores', y='Speedup', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,
                  zorder=2)
@@ -255,12 +252,15 @@ def plot_speedup(resolution, config):
     df_bp.plot(kind='line', x='Cores', y='Speedup', ax=ax, color='green', style=':X', markeredgecolor='black', ms=5,
                zorder=2)
 
-    ax.set_xlim(xmin=0, xmax=max(ax.get_xlim()) + 4)
-    ax.xaxis.set_ticks(Const.xtick_dict[resolution])
+    ax.set_xlim(xmin=0, xmax=max(ax.get_xlim()) + 2)
+    ax.xaxis.set_ticks(Const.xtick_cppg[resolution])
 
+    scale = calc_scale(resolution)
+    perfect = np.linspace(0, scale, scale + 1)
+    plt.plot(perfect, perfect, color='black', linestyle=':')
     plt.ylabel('Speedup relative to 1 core')
     plt.xlabel('Number of processor cores')
-    ax.legend(['Linear scaling', 'ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake'], loc='upper center',
+    ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake', 'Linear',], loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
               fancybox=True, shadow=True, ncol=5)
 
@@ -280,7 +280,7 @@ def plot_speedup(resolution, config):
     ax.spines['right'].set_color('none')
 
     title_config = config.split('_')[0].capitalize() + '-' + config.split('_')[1].capitalize()
-    plt.title(f'Speedup for the {title_config} simulation using {resolution} resolution')
+    plt.title(f'{title_config} configuration at {resolution} resolution')
 
     plt.tight_layout()
     filename = f'speedup-{resolution}-{config}.pdf'
@@ -302,10 +302,10 @@ def main():
     plot_total_program('held_suarez')
     plot_total_program('grey_mars')
     # plot_split_bar_graph('T42')
-    # plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
-    # plot_pairs.remove((Const.t85, Const.grey_mars))
-    # [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]
-    # [plot_speedup(item[0], item[1]) for item in plot_pairs]
+    plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
+    plot_pairs.remove((Const.t85, Const.grey_mars))
+    [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]
+    [plot_speedup(item[0], item[1]) for item in plot_pairs]
 
     # df_bcp3 = process_dataframe(Const.bcp3, Const.t85, Const.held_suarez)
     # plot_bar_graph('T42', 'Held_suarez')
