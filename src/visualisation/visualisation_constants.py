@@ -1,6 +1,6 @@
 # Data locations
 dir_loc = '/Users/george/isca_python/visualisation/bcp3/whole_node/held_suarez/'
-spreadsheet_dir = '/Users/george/Dropbox/university_of_bristol/thesis/data_collection/run_measurements.xlsx'
+spreadsheet_dir = '../../data/run_measurements.xlsx'
 save_path = '/Users/george/Dropbox/university_of_bristol/thesis/Thesis/img'
 
 # Compiler names
