@@ -60,7 +60,6 @@ def setup_experiment(codebase):
     """
     Setup an experiment given the experiment name.
     :param codebase:  one of 'held_suarez', 'grey_mars'
-    :return:
     """
     if codebase == constants.HELD_SUAREZ:
         from config.held_suarez_config import setup_held_suarez_codebase, setup_held_suarez_diag, \
@@ -73,6 +72,16 @@ def setup_experiment(codebase):
 
 
 def run_experiment(ncores, codebase, diag, namelist, resolution, exp_name, codebase_name):
+    """
+    Measure the time taken to complete the experiment
+    :param ncores: Number of processor cores to be used
+    :param codebase: One of: Held-Suarez, Grey-Mars
+    :param diag: Diagnostics
+    :param namelist: Namelist file
+    :param resolution: Resolution of simulatin. One of: T21, T42, T85
+    :param exp_name: Name of the experiment
+    :param codebase_name: Name of the codebase
+    """
     runs = 0
     if codebase_name == constants.HELD_SUAREZ:
         runs = 13
