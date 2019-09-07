@@ -19,6 +19,9 @@ def main():
 
 
 def plot_estimate():
+    """
+    Plot estimated performance
+    """
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name=Const.isam, skiprows=2, usecols='A:E')
     df = df[(df.Config == Const.held_suarez) & (df.Resolution == Const.t42)]
     slowdown = 1.073732491
@@ -72,14 +75,14 @@ def plot_estimate():
     plt.show()
 
 
-# plot_estimate()
-
-
 def amdahl_law(x, p):
     return 1 / ((1 - p) + (p / x))
 
 
 def plot_least_squares():
+    """
+    Use least squares regression to find the value for p
+    """
     gmodel = Model(amdahl_law)
     result = gmodel.fit(y, x=x, p=0.98)
 

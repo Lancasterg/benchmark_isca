@@ -20,8 +20,6 @@ def format_ax(ax):
     # ax.minorticks_on()
     ax.title.set_text(f'Peak theoretical performance and HPL measured performance of \n'
                       f'the node configurations used in this research project')
-    # ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
-    # ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
     ax.set_xticklabels(['Sandy Bridge', 'Broadwell', 'Skylake', 'ThunderX2'])
 
     # change the style of the axis spines
@@ -31,7 +29,7 @@ def format_ax(ax):
     ax.set_xlabel('Processor Family')
 
 
-def read_data():
+def plot_data():
     colors = ['#c0df85', '#db6c79', '#aec5eb']
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name='hpl', skiprows=0, usecols='A:D')
     print(df)

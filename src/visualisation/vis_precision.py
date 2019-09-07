@@ -11,8 +11,6 @@ import latex_fonts
 
 def main():
     fig, ax = plt.subplots(figsize=(8, 4))
-    # Const.clusters.remove(Const.bcp4)
-    # Const.clusters.remove(Const.isam)
     line_colors = {Const.isam: 'red', Const.bcp3: 'magenta', Const.bcp4: 'blue', Const.bp: 'green'}
     line_colors_kind_4 = {Const.isam: 'orange', Const.bcp3: 'purple', Const.bcp4: 'cyan', Const.bp: 'brown'}
     line_styles = {Const.isam: ':o', Const.bcp3: ':^', Const.bcp4: ':s', Const.bp: ':X'}
@@ -33,6 +31,9 @@ def main():
 
 
 def read_data(df, cluster):
+    """
+    Read into a Pandas DataFrame
+    """
     df = df[['Runtime', 'kind_4', 'Resolution', 'Config', 'Cores']]
     df['cluster'] = cluster
     df = df.dropna(axis=0)
@@ -42,14 +43,13 @@ def read_data(df, cluster):
 
 
 def nice_ax(ax, resolution):
+    """
+    Prettify the axes
+    """
     plt.yscale('log')
     ax.set_xlim(xmin=0, xmax=max(ax.get_xlim()) + 4)
     ax.set_ylim(ymin=0)
-    # ax.set_axisbelow(True)
     ax.set_ylabel('Runtime (seconds)')
-    # ax.minorticks_on()
-    # ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
-    # ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=4)
     start, end = ax.get_xlim()
     ax.xaxis.set_ticks(np.arange(start, end, 2 if resolution == Const.t21 else 4 if resolution == Const.t42 else 8))

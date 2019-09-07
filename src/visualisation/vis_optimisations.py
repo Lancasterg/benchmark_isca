@@ -8,7 +8,6 @@ import latex_fonts
 
 
 def format_ax(ax, config):
-    print()
     ax.set_axisbelow(True)
     ax.set_ylabel('Runtime (seconds)')
     ax.yaxis.grid(True)
@@ -70,6 +69,9 @@ def read_speedup_data(config, col_names):
 
 
 def plot_speedup():
+    """
+    Plot the speedup of all optimisations compared to unmodified code
+    """
     fftw = 'FFTW ($A$)'
     sp = 'Single precision ($B$)'
     fftw_sp = 'Single precision FFTW ($A$ + $B$)'

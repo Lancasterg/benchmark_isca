@@ -13,6 +13,9 @@ edgecolor = 'black'
 
 
 def process_dataframe(sheet_name, resolution, config):
+    """
+    Read in a pandas DataFrame from a csv file
+    """
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name=sheet_name, skiprows=2, usecols=[0, 1, 2, 3, 4])
     df['Cluster'] = sheet_name
     df = df[df.Resolution == resolution]
@@ -25,24 +28,14 @@ def process_dataframe(sheet_name, resolution, config):
     return df
 
 
-def calc_cell_rate(resolution):
-    df = process_dataframe(Const.bcp3, resolution, Const.held_suarez)
-    Const.clusters.remove(Const.bcp3)
-    for cluster in Const.clusters:
-        df = df.append(process_dataframe(cluster, resolution, Const.held_suarez))
-    df[Const.per_grid] = df['Runtime'] / Const.grid_lookup[resolution] * df['Cores'] / Const.n_timesteps[
-        Const.held_suarez]
-    df['Cores'] = pd.to_numeric(df['Cores'])
-    df['Per_grid'] = pd.to_numeric(df['Per_grid'])
-
-    return df
-
-
 def calc_grid_rate(df, resolution):
+    """
+    Calculate the computation rate per grid point per time step
+
+    cost_per_grid_point = (runtime * processors) / (n_time_steps * n_grid_points)
+    """
     df[Const.per_grid] = (df['Runtime'] / Const.grid_lookup[resolution]) * (
             df['Cores'] / Const.n_timesteps[Const.held_suarez])
-
-    df['oo'] = (df['Runtime'] * df['Cores']) / (Const.n_timesteps[Const.held_suarez] * Const.grid_lookup[resolution])
 
     df['Cores'] = pd.to_numeric(df['Cores'])
     df['Per_grid'] = pd.to_numeric(df['Per_grid'])
@@ -54,17 +47,13 @@ def calc_scale(resolution):
 
 
 def plot_data(resolution, config, ax):
+    """
+    Plot the rate of computation
+    """
     df_bcp3 = calc_grid_rate(process_dataframe(Const.bcp3, resolution, config), resolution)
     df_bcp4 = calc_grid_rate(process_dataframe(Const.bcp4, resolution, config), resolution)
     df_isam = calc_grid_rate(process_dataframe(Const.isam, resolution, config), resolution)
     df_bp = calc_grid_rate(process_dataframe(Const.bp, resolution, config), resolution)
-
-    # print(df_bcp3)
-    # print(df_bcp4)
-    # print(df_isam)
-
-    if resolution == Const.t42 and config == Const.grey_mars:
-        print(df_isam)
 
     a = df_isam.plot(kind='scatter', x='Cores', y=Const.per_grid, ax=ax, color='red', marker='o', s=size,
                      zorder=2, lw=lw, edgecolor=edgecolor, legend=True)
@@ -102,9 +91,6 @@ def main():
     plot_data(Const.t21, Const.grey_mars, axes[0, 1])
     plot_data(Const.t42, Const.held_suarez, axes[1, 0])
     plot_data(Const.t42, Const.grey_mars, axes[1, 1])
-    # plot_data(Const.t85, Const.held_suarez, axes[2, 0])
-
-    # handles = plot_data(Const.t42, Const.grey_mars, axes[1, 2])
 
     axes[0, 1].set_ylabel('')
     axes[1, 1].set_ylabel('')

@@ -12,6 +12,9 @@ rc('text', usetex=True)
 
 
 def read_fftw_data(sheet_name):
+    """
+    Read the performance of fftw
+    """
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name=sheet_name, skiprows=2, usecols='J:N')
     df['Cluster'] = sheet_name
     df = df.dropna()
@@ -21,6 +24,9 @@ def read_fftw_data(sheet_name):
 
 
 def plot_fft_data(df, ax):
+    """
+    Plot the performance of fftw
+    """
     colors = ["#3a7ca5", "#d00000"]
 
     df.plot.bar(x='grid_size', rot=0, color=colors, edgecolor="black", linewidth=1, ax=ax, legend=False)
@@ -69,6 +75,9 @@ def plot_data(ax, df, res):
 
 
 def plot_fft_bar():
+    """
+    Plot a bar chart comparing the performance of FFTW and Temperton's FFT
+    """
     fig, axes = plt.subplots(2, 2, figsize=(10, 6))
 
     df = read_fftw_data(Const.isam)
@@ -110,14 +119,13 @@ def calc_speedup(df):
 
 
 def plot_fft_speedup():
+    """
+    Plot the speedup of fftw and single precision relative to unmodified code
+    """
     df_isam = calc_speedup(read_fftw_data(Const.isam))
     df_bcp3 = calc_speedup(read_fftw_data(Const.bcp3))
     df_bcp4 = calc_speedup(read_fftw_data(Const.bcp4))
     df_bp = calc_speedup(read_fftw_data(Const.bp))
-
-    size = 20
-    lw = 1
-    edgecolor = 'black'
 
     fig, ax = plt.subplots(figsize=(7, 3.25))
     df_isam.plot(kind='line', x='grid-size', y='Speedup', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,

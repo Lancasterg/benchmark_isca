@@ -29,6 +29,9 @@ arrowprops = dict(facecolor='black', arrowstyle='->')
 
 
 def plot_original_roofline():
+    """
+    Plot the vanilla roofline
+    """
     plt.figure(figsize=(10, 6), dpi=300)
     plt.ylabel('Double Precision GFLOPS/Second (SIMD)')
     plt.xlabel('Operational Intensity (FLOPS/byte)')
@@ -82,13 +85,6 @@ def plot_original_roofline():
                 xytext=(grey_mars_ai_t42 + 0.1, 1.5),
                 arrowprops=arrowprops)
 
-    # ax.scatter(0.11, 1.68, edgecolor='black', linewidth='1', color='blue',
-    #            label=f'Program total performance', zorder=2)
-    # ax.annotate(f'{1.68} GFLOPS\n{0.11} FLOP/Byte',
-    #             xy=(0.11, 1.68),
-    #             xytext=(program_total_ai + 0.1, 10),
-    #             arrowprops=arrowprops)
-
     ax.scatter(5.69, 0.22, edgecolor='black', linewidth='1', color='red', label=r'Loop $x$ (\texttt{vpassm:1081})',
                zorder=2)
     ax.annotate(f'{0.22} GFLOPS\n{5.69} FLOP/Byte',
@@ -110,6 +106,9 @@ def plot_original_roofline():
 
 
 def plot_opt_roofline():
+    """
+    Plot the optimised roofline model
+    """
     plt.figure(figsize=(10, 6), dpi=300)
     plt.ylabel('GFLOPS/Second (SIMD)')
     plt.xlabel('Operational Intensity (FLOPS/byte)')
@@ -169,17 +168,26 @@ def plot_opt_roofline():
 
 
 def plot_roof_line(x, y, ax, color):
+    """
+    Add a 'roof' to the graph
+    """
     ax.plot(x, y, '--', color=color, zorder=1)
     ax.plot([x[1], x[1]], [0, 584.99], '--', color=color, zorder=1)
 
 
 def myLogFormat(y, pos):
+    """
+    Prettify the log scale
+    """
     decimalplaces = int(np.maximum(-np.log10(y), 0))  # =0 for numbers >=1
     formatstring = '{{:.{:1d}f}}'.format(decimalplaces)
     return formatstring.format(y)
 
 
 def drawArrow(A, B, ax):
+    """
+    Annotate an area of the graph
+    """
     ax.annotate('', xytext=(A[0], A[1]), xy=(B[0], B[1]), arrowprops=arrowprops)
 
 

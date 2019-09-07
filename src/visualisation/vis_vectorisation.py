@@ -13,6 +13,9 @@ colors = ['#c0df85', '#db6c79']
 
 
 def plt_vec_dp():
+    """
+    Plot vectorisation improvement at double precision
+    """
     fig, ax = plt.subplots(figsize=(7, 3))
 
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name='vectorisation', skiprows=0, usecols='A:E')
@@ -27,7 +30,6 @@ def plt_vec_dp():
 
     df = pd.merge(df_held, df_grey, on='Cluster')
 
-    print(df)
     df.plot.bar(x='Cluster', rot=0, linewidth=0.5, edgecolor="black", colors=colors, ax=ax)
 
     plt.xlabel('Processor family')
@@ -50,6 +52,9 @@ def plt_vec_dp():
 
 
 def plt_vec_sp():
+    """
+    Plot vectorisation improvement at single precision
+    """
     fig, ax = plt.subplots(figsize=(7, 3))
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name='opt_eval', skiprows=13, usecols='A:H')
     df = df[['Processor family', 'hs-Speedup', 'gm-Speedup']]

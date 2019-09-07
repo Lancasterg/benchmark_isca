@@ -13,6 +13,9 @@ import latex_fonts
 
 
 def read_resolution(resolution):
+    """
+    Read in as a Pandas DataFrame
+    """
     directory = os.fsencode(Const.dir_loc)
     frames = []
     for file in os.listdir(directory):
@@ -32,24 +35,6 @@ def plot_resolution(df):
     ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
     ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
     plt.show()
-
-
-def plot_all_resolutions():
-    resolutions = ['T21', 'T42', 'T85']
-    for resolution in resolutions:
-        df = read_resolution(resolution)
-        df = df[df.Epoch == 'Total']
-        plot_resolution(df)
-
-
-def runtime_stats():
-    filename = 'held_suarez_8_T85.csv'
-    df = pd.read_csv(Const.dir_loc + filename, delimiter=',')
-    df = df[df.Epoch != 'Total']
-    df['Epoch'] = df['Epoch'].astype(float)
-    print('Mean', df['Time'].mean())
-    print('Standard deviation', df['Time'].std())
-    print('Variance', df['Time'].var())
 
 
 def process_dataframe(sheet_name, resolution, config):
@@ -76,6 +61,9 @@ def lookup_scale(resolution, config):
 
 
 def plot_scaling_graph(resolution, config, show_node=True):
+    """
+    Plot performance as the number of processor cores increases
+    """
     df_bcp3 = process_dataframe(Const.bcp3, resolution, config)
     df_bcp4 = process_dataframe(Const.bcp4, resolution, config)
     df_isam = process_dataframe(Const.isam, resolution, config)
@@ -136,62 +124,21 @@ def fix_data():
     print(df)
 
 
-def plot_bar_graph(resolution, config):
-    arr = []
-    for cluster in Const.clusters:
-        df_temp = process_dataframe(cluster, resolution, config)
-        df_temp_min = df_temp.loc[df_temp['Runtime'].idxmin(), :]
-        arr.append(df_temp_min)
-
-    df = pd.DataFrame(arr)
-
-    ax = df.plot.bar(x='Cluster', y='Runtime', rot=0, edgecolor="black", linewidth=0.5)
-    ax.set_axisbelow(True)
-    ax.set_ylabel('Runtime (seconds)')
-    ax.minorticks_on()
-    ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
-    ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-
-    for p in ax.patches:
-        ax.annotate(str(p.get_height()), (p.get_x() * 1.005, p.get_height() * 1.005))
-    plt.title(f'Total program runtime for {config}, resolution: {resolution}')
-    # Could annotate the number of cores used...
-    plt.show()
-
-
-def plot_split_bar_graph(resolution):
-    arr = []
-    for cluster in Const.clusters:
-        for config in Const.configs:
-            df_temp = process_dataframe(cluster, resolution, config)
-            df_temp_min = df_temp.loc[df_temp['Runtime'].idxmin(), :]
-            arr.append(df_temp_min)
-    df = pd.DataFrame(arr)
-    df_plot = pd.DataFrame([df[(df.Config == config)]['Runtime'].reset_index(drop=True) for config in Const.configs],
-                           index=Const.configs).T
-    df_plot.rename(index={0: Const.bcp3, 1: Const.bcp4, 2: Const.bp, 3: Const.isam}, inplace=True)
-    axes = df_plot.plot.bar(rot=0, subplots=True, edgecolor="black", linewidth=0.5)
-    for ax in axes:
-        ax.set_axisbelow(True)
-        ax.set_ylabel('Wallclock runtime (seconds)')
-        ax.minorticks_on()
-        ax.grid(which='major', linestyle='-', linewidth='0.5', color='red')
-        ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
-    plt.show()
-
-
 def remove_total(df):
     return df[df.Epoch != 'Total']
 
 
 def plot_total_program(config):
+    """
+    PLot the variations in simulation epoch time
+    """
     df_bcp3 = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/bcp3/{config}_16_T42.csv', skiprows=0))
     df_bcp4 = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/bcp4/{config}_16_T42.csv', skiprows=0))
     df_bp = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/bluepebble/{config}_16_T42.csv', skiprows=0))
     df_isam = remove_total(pd.read_csv(f'/Users/george/benchmark_isca/data/isambard/{config}_32_T42.csv', skiprows=0))
 
     plt.figure()
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(7, 3.5))
 
     df_isam.plot(kind='line', x='Epoch', y='Time', ax=ax, color='red', style=':o', markeredgecolor='black', ms=5,
                  zorder=2)
@@ -225,6 +172,9 @@ def plot_total_program(config):
 
 
 def plot_speedup(resolution, config):
+    """
+    Plot the speedup relative to unmodified code
+    """
     df_bcp3 = process_dataframe(Const.bcp3, resolution, config)
     df_bcp4 = process_dataframe(Const.bcp4, resolution, config)
     df_isam = process_dataframe(Const.isam, resolution, config)
@@ -234,12 +184,6 @@ def plot_speedup(resolution, config):
     calc_speedup(df_bcp4)
     calc_speedup(df_bp)
     calc_speedup(df_isam)
-
-    if resolution == Const.t85 and config == Const.held_suarez:
-        print('isam', df_isam)
-        print('bcp3', df_bcp3)
-        print('bcp4', df_bcp4)
-        print('bp', df_bp)
 
     fig, ax = plt.subplots(figsize=(7, 3.5))
 
@@ -260,20 +204,13 @@ def plot_speedup(resolution, config):
     plt.plot(perfect, perfect, color='black', linestyle=':')
     plt.ylabel('Speedup relative to 1 core')
     plt.xlabel('Number of processor cores')
-    ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake', 'Linear',], loc='upper center',
+    ax.legend(['ThunderX2', 'Sandy Bridge', 'Broadwell', 'Skylake', 'Linear', ], loc='upper center',
               bbox_to_anchor=(0.5, -0.2),
               fancybox=True, shadow=True, ncol=5)
 
     ax.yaxis.grid(True)
     ax.set_axisbelow(True)
     ax.yaxis.grid(which='major', linestyle=':', linewidth='0.5', color='black')
-
-    # plt.yscale('log')
-    # change the style of the axis spines
-    # ax.set_axisbelow(True)
-    # ax.minorticks_on()
-    # ax.grid(which='major', linestyle=':', linewidth='0.5', color='black')
-    # ax.grid(which='minor', linestyle=':', linewidth='0.5', color='black')
 
     # change the style of the axis spines
     ax.spines['top'].set_color('none')
@@ -301,14 +238,10 @@ def calc_scale(resolution):
 def main():
     plot_total_program('held_suarez')
     plot_total_program('grey_mars')
-    # plot_split_bar_graph('T42')
     plot_pairs = list(itertools.product(Const.resolutions, Const.configs))
     plot_pairs.remove((Const.t85, Const.grey_mars))
     [plot_scaling_graph(item[0], item[1]) for item in plot_pairs]
     [plot_speedup(item[0], item[1]) for item in plot_pairs]
-
-    # df_bcp3 = process_dataframe(Const.bcp3, Const.t85, Const.held_suarez)
-    # plot_bar_graph('T42', 'Held_suarez')
 
 
 if __name__ == '__main__':

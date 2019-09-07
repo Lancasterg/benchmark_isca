@@ -18,10 +18,10 @@ legends = {h: ['Intel', 'GNU', 'CCE'], g: ['Intel', 'GNU']}
 labels = {h: ['Sandy Bridge', 'Broadwell', 'Thunderx2'], g: ['Sandy Bridge', 'Broadwell']}
 
 
-# colors = {h: ["#3a7ca5", '#60b564', "#d00000"], g:['#60b564', "#d00000"]}
-
-
 def plot_compiler_data(config, ax, res):
+    """
+    Plot the performance of various compilers
+    """
     df = pd.read_excel(open(Const.spreadsheet_dir, 'rb'), sheet_name='compilers', skiprows=0,
                        usecols='A:E')
     df = df[df.Resolution == res]
@@ -46,6 +46,9 @@ def plot_compiler_data(config, ax, res):
 
 
 def red_bar(ax):
+    """
+    Change colour of CCE bar to red
+    """
     bars = [rect for rect in ax.get_children() if isinstance(rect, mpl.patches.Rectangle)]
     bars[len(bars) - 2].set_facecolor('#d00000')
 
@@ -56,8 +59,7 @@ def main():
                        Patch(facecolor='#60b564', edgecolor='black',
                              label='GCC'),
                        Patch(facecolor='#d00000', edgecolor='black',
-                             label='CCE')
-                       ]
+                             label='CCE')]
 
     fig, axes = plt.subplots(2, 2, figsize=(9, 6))
     plot_compiler_data('Held-Suarez', axes[0, 0], 'T21')

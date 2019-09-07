@@ -22,8 +22,9 @@ def main():
 
 
 def nice_ax(ax):
-    # plt.yscale('log')
-    # plt.xscale('log')
+    """
+    Prettify axes
+    """
     plt.loglog()
     legend_items = ['Sandy Bridge', 'Broadwell', 'Skylake', 'ThunderX2']
     plt.title('STREAM TRIAD memory-bandwidth measurments')
