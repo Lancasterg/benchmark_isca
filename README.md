@@ -8,7 +8,6 @@ following supercomputers managed by the Advanced Computing Research Centre (ACRC
 - BlueCrystal phase 4
 - Bluepebble
 - Isambard
-- ~~Catalyst~~
 
 You can find the Isca climate model repository at `https://github.com/ExeClim/Isca`
 
