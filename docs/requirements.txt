@@ -5,7 +5,7 @@ certifi==2019.6.16
 cycler==0.10.0
 decorator==4.4.0
 f90nml==1.0.2
-ipython==7.4.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 -e git+git@github.com:Lancasterg/Isca.git@8d0a7e112348ca6d31d3784e3fe6ebd19cb47157#egg=Isca&subdirectory=src/extra/python
 isort==4.3.17
